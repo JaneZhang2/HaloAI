@@ -1,0 +1,262 @@
+
+
+
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default=undefined;var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp;
+var _react=require('react');var _react2=_interopRequireDefault(_react);var _View=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/View/View.web');var _View2=_interopRequireDefault(_View);var _Platform=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/Platform/Platform.web');var _Platform2=_interopRequireDefault(_Platform);var _DeviceEventEmitter=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/EventEmitter/DeviceEventEmitter.web');var _DeviceEventEmitter2=_interopRequireDefault(_DeviceEventEmitter);
+
+
+
+
+
+
+
+var _ViewPort=require('./ViewPort');var _ViewPort2=_interopRequireDefault(_ViewPort);
+var _Log=require('./Log');var _Log2=_interopRequireDefault(_Log);
+var _URL=require('./URL');var _URL2=_interopRequireDefault(_URL);
+var _getUrlParams=require('./Util/getUrlParams');var _getUrlParams2=_interopRequireDefault(_getUrlParams);
+var _parseUrl=require('./Util/parseUrl');var _parseUrl2=_interopRequireDefault(_parseUrl);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+Page=(_temp=_class=function(_Component){_inherits(Page,_Component);
+function Page(props){_classCallCheck(this,Page);var _this=_possibleConstructorReturn(this,(Page.__proto__||Object.getPrototypeOf(Page)).call(this,
+props));
+global.currentApp.pageInstance=_this;return _this;
+}_createClass(Page,[{key:'push',value:function push(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pageName){var params=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};var queryStringObj=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};
+this.props.navigation.push(pageName,params,queryStringObj);
+}},{key:'pop',value:function pop()
+{var _props$navigation;
+(_props$navigation=this.props.navigation).pop.apply(_props$navigation,arguments);
+}},{key:'replace',value:function replace(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pageName){var params=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+this.props.navigation.replace(pageName,params);
+}},{key:'replaceAtIndex',value:function replaceAtIndex(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pageName,index,cb){var params=arguments.length>3&&arguments[3]!==undefined?arguments[3]:{};
+
+
+
+
+
+
+
+this.props.navigation.replaceAtIndex(pageName,index,cb,params);
+}},{key:'replacePrevious',value:function replacePrevious(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pageName){var params=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+this.props.navigation.replacePrevious(pageName,params);
+}},{key:'getQuery',value:function getQuery(
+
+
+
+
+
+key){
+var urlQuery=this.context.urlQuery;
+urlQuery=urlQuery||this.props.app.urlQuery;
+return key?urlQuery[key]:urlQuery;
+}},{key:'getEnv',value:function getEnv(
+
+
+
+
+key){
+return key?this.context.env[key]:this.context.env;
+}},{key:'_calculateHeaderViewHeight',value:function _calculateHeaderViewHeight()
+{
+var marginTop=56;
+if(_Platform2.default.OS==='ios'){
+marginTop=64;
+}
+var tpheader=this.props.app.setHeader&&this.props.app.hasHeader();
+return tpheader?marginTop:0;
+}},{key:'render',value:function render()
+{
+var defaultStyle={flexDirection:'column',flex:1,marginTop:this._calculateHeaderViewHeight()};
+return(
+_react2.default.createElement(_View2.default,{style:[defaultStyle]},
+_react2.default.createElement(_ViewPort2.default,{style:{flex:1,position:'relative'}},
+this.props.children)));
+
+
+
+}},{key:'_onWillShow',value:function _onWillShow(
+
+
+route){
+global.channel=this.getChannel&&this.getChannel();
+this.onWillFocus&&this.onWillFocus(route);
+}},{key:'_onDidShow',value:function _onDidShow(
+route){
+var pageId=this.getPageId?this.getPageId():this.props&&this.props.pageId||0;
+var url=global.location.href;
+var urlObj=(0,_getUrlParams2.default)((0,_parseUrl2.default)(url).search)||{};
+var orderid=urlObj['orderid']||urlObj['oid']||"";
+var refer=void 0;
+if(global.document){
+refer=global.document.referrer;
+}
+
+try{
+var params="";
+if(route.params){
+params='&params='+encodeURIComponent(JSON.stringify(route.params));
+}
+var pageName="";
+if(route.name&&global.cw_routeMapConfig){
+for(var key in global.cw_routeMapConfig){
+if(global.cw_routeMapConfig[key]==route.name){
+pageName=key;
+break;
+}
+}
+if(url.indexOf('?')==-1){
+pageName='?pageName='+pageName;
+}else
+{
+pageName='&pageName='+pageName;
+}
+}
+pageId!=='ignore_page_pv'&&_Log2.default.send('pv',{
+page_id:pageId,
+url:url+pageName+params,
+page_url_query:JSON.stringify(this.props.app.urlQuery),
+orderid:orderid,
+refer:refer});
+
+}catch(err){
+console.log("Page _onDidShow error message:",err);
+}
+
+this.onDidFocus&&this.onDidFocus(route);
+}},{key:'logPageRenderFinished',value:function logPageRenderFinished()
+{
+
+if(global.CW_FSTIME){
+try{
+var startTime=global.performance.timing.navigationStart,endTime=new Date().getTime();
+var diffTime=endTime-(startTime||global.CW_FSTIME);
+var options={prjName:WEBPACK_PROJECT_NAME,crnwebVer:WEBPACK_CRNWEB_VERSION,cwVer:WEBPACK_CW_VERSION,startTime:startTime,endTime:endTime,CW_FSTIME:global.CW_FSTIME};
+if(this&&this.getPageId&&'function'===typeof this.getPageId){
+options.pageid=this.getPageId();
+}
+_Log2.default.logMetric('101367',diffTime,options);
+global.CW_FSTIME=0;
+}catch(ex){
+}
+}
+
+}}],[{key:'goHome',value:function goHome(){if(_Platform2.default.isInApp&&global.CtripUtil){global.CtripUtil.app_back_to_home();}else{var url=global.location.protocol+'//'+global.location.host+'/html5';_URL2.default.openURL(url);}}},{key:'popToPage',value:function popToPage(name,info){_DeviceEventEmitter2.default.publish("popToPage",[name,info]);}},{key:'registerPage',value:function registerPage(name,callback){callback();}}]);return Page;}(_react.Component),_class.enableNativeDragBack=function(){},_class.disableNativeDragBack=function(){},_temp);exports.default=Page;module.exports=exports['default'];

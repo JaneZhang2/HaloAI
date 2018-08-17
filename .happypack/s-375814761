@@ -1,0 +1,262 @@
+
+
+
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);
+var _normalizeNativeEvent=require('../react-lib/normalizeNativeEvent');var _normalizeNativeEvent2=_interopRequireDefault(_normalizeNativeEvent);
+var _reactDom=require('react-dom');var _reactDom2=_interopRequireDefault(_reactDom);
+var _unstableNativeDependencies=require('react-dom/unstable-native-dependencies');var _unstableNativeDependencies2=_interopRequireDefault(_unstableNativeDependencies);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}var
+
+EventPluginHub=_reactDom2.default.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.EventPluginHub;var
+ResponderEventPlugin=_unstableNativeDependencies2.default.ResponderEventPlugin,ResponderTouchHistoryStore=_unstableNativeDependencies2.default.ResponderTouchHistoryStore;
+
+var topMouseDown='topMouseDown';
+var topMouseMove='topMouseMove';
+var topMouseUp='topMouseUp';
+var topScroll='topScroll';
+var topSelectionChange='topSelectionChange';
+var topTouchCancel='topTouchCancel';
+var topTouchEnd='topTouchEnd';
+var topTouchMove='topTouchMove';
+var topTouchStart='topTouchStart';
+
+var endDependencies=[topTouchCancel,topTouchEnd];
+var moveDependencies=[topTouchMove];
+var startDependencies=[topTouchStart];
+
+
+
+
+ResponderEventPlugin.eventTypes.responderMove.dependencies=moveDependencies;
+ResponderEventPlugin.eventTypes.responderEnd.dependencies=endDependencies;
+ResponderEventPlugin.eventTypes.responderStart.dependencies=startDependencies;
+ResponderEventPlugin.eventTypes.responderRelease.dependencies=endDependencies;
+ResponderEventPlugin.eventTypes.responderTerminationRequest.dependencies=[];
+ResponderEventPlugin.eventTypes.responderGrant.dependencies=[];
+ResponderEventPlugin.eventTypes.responderReject.dependencies=[];
+ResponderEventPlugin.eventTypes.responderTerminate.dependencies=[];
+ResponderEventPlugin.eventTypes.moveShouldSetResponder.dependencies=moveDependencies;
+ResponderEventPlugin.eventTypes.selectionChangeShouldSetResponder.dependencies=[topSelectionChange];
+ResponderEventPlugin.eventTypes.scrollShouldSetResponder.dependencies=[topScroll];
+ResponderEventPlugin.eventTypes.startShouldSetResponder.dependencies=startDependencies;
+
+var originalRecordTouchTrack=ResponderTouchHistoryStore.recordTouchTrack;
+
+ResponderTouchHistoryStore.recordTouchTrack=function(topLevelType,nativeEvent){
+
+if(topLevelType===topMouseMove&&!ResponderTouchHistoryStore.touchHistory.touchBank.length){
+return;
+}
+
+var normalizedEvent=(0,_normalizeNativeEvent2.default)(nativeEvent);
+originalRecordTouchTrack.call(ResponderTouchHistoryStore,topLevelType,normalizedEvent);
+};
+
+EventPluginHub.injection.injectEventPluginsByName({
+ResponderEventPlugin:ResponderEventPlugin});
+
+
+
+
+
+_react2.default.__updateIdx=0;
+_react2.default.__updateIdxHash={};
+_react2.default.__forceUpdate=false;
+_react2.default.__updateLocker=0;
+_react2.default.__updateList=[];
+_react2.default.unlockUpdater=function(idx){
+if(_react2.default.__updateIdxHash.hasOwnProperty(idx)){
+
+delete _react2.default.__updateIdxHash[idx];
+_react2.default.__updateLocker--;
+
+
+if(!_react2.default.__updateLocker){
+
+pushToBatchUPdates();
+}
+}
+};
+
+function pushToBatchUPdates(){var
+
+t;if(_react2.default.__updateList.length>0){
+_reactDom2.default.unstable_batchedUpdates(function(){
+while(t=_react2.default.__updateList.shift()){
+
+_react2.default.__setState.call(t._this,t.newState);
+}
+});
+}
+}
+
+_react2.default.lockUpdater=function(){
+_react2.default.__updateIdx++;
+
+_react2.default.__updateLocker++;
+
+
+
+_react2.default.__updateIdxHash[_react2.default.__updateIdx]=true;
+return _react2.default.__updateIdx;
+};
+_react2.default.__setState=_react2.default.Component.prototype.setState;
+
+var idx=0;
+
+_react2.default.Component.prototype.setState=function(newState,callback){
+
+if(!_react2.default.__updateLocker||_react2.default.__forceUpdate||this.props&&this.props.stickyHeaderIndices&&this.props.stickyHeaderIndices.length>0){
+_react2.default.__setState.call(this,newState,callback);
+}else if(typeof Swiper!='undefined'&&this instanceof Swiper||this.componentName&&this.componentName==='rnScrollableTabView'){
+_react2.default.__forceUpdate=true;
+_react2.default.__setState.call(this,newState,callback);
+_react2.default.__forceUpdate=false;
+}else{
+if(callback){
+
+pushToBatchUPdates();
+
+}
+
+for(var key in newState){
+
+if(typeof newState.hasOwnProperty=='function'&&newState.hasOwnProperty(key)){
+this.state[key]=newState[key];
+}
+}
+
+_react2.default.__updateList.push({
+_this:this,
+newState:newState,
+idx:idx++});
+
+
+callback&&callback.call(this);
+
+}
+};
+
+var frameSpeed=0;
+var frameSpeedCallbacks=[];
+(function(){
+var times=30;
+var ts=0;
+var total=0;
+var i=times;
+function testFrame(){
+var now=+new Date(),
+
+
+
+
+
+
+
+
+fn;if(ts){total+=now-ts;}ts=now;if(i>0){requestAnimationFrame(testFrame);}else{frameSpeed=Math.ceil(total/times);fn=null;
+while(fn=frameSpeedCallbacks.shift()){
+fn(frameSpeed);
+}
+}
+i--;
+}
+
+setTimeout(testFrame,2000);
+})();
+
+_react2.default.getFrameSpeed=function(callback){
+if(frameSpeed){
+callback&&callback(frameSpeed);
+}else if(callback){
+frameSpeedCallbacks.push(callback);
+}
+};
+
+
+
+
+var oldlocalStorage=global.localStorage;
+var oldSetItem=oldlocalStorage.setItem.bind(oldlocalStorage);
+
+if(!global.cw_api_isPrivateMode){
+global.localStorage.setItem=function(){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var clearArray=[function clearCache(){for(var props in oldlocalStorage){if(props.toLowerCase().indexOf("_cache")>=0){oldlocalStorage.removeItem(props);}}},function clearABMap(){for(var props in oldlocalStorage){if(props.indexOf("BMap_tile")>=0||props.indexOf("_AMap_main")>=0){oldlocalStorage.removeItem(props);}}},function clearAllLs(){var whiteList={"PAYMENT2_":1,"SALESOBJ":1,"SALES_OBJECT":1,"UNION":1,"SALES":1,"AUTHSTORE":1,"HEADSTORE":1,"PAUTH":1,"C_CLEAR_OVERDUE":1,"SOURCEID":1};for(var props in oldlocalStorage){if(!whiteList.hasOwnProperty(props)){oldlocalStorage.removeItem(props);}}}];
+var ret=function(key,value,originClearArray){
+
+var clearArrayV1=Array.prototype.slice.call(originClearArray?originClearArray:clearArray),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+space,
+
+
+
+
+
+func;var type="noneCachedKey";try{oldSetItem(key,value);if(key.toLowerCase().indexOf("_cache")>=0){type="cachedKey";}}catch(e){if(e.name=="QuotaExceededError"||e.name=="NS_ERROR_DOM_QUOTA_REACHED"){if(clearArrayV1.length==0){global.__bfi.push(['_trackMatrix',"101316",{message:'QuotaExceededError',key:key,tag:true,type:type},1]);return;}space=encodeURIComponent(JSON.stringify(oldlocalStorage)).length;global.__bfi.push(['_trackMatrix',"101316",{message:'QuotaExceededError',key:key,type:type},space]);func=clearArrayV1.shift();
+func();
+ret(key,value,clearArrayV1);
+}else{
+global.__bfi.push(['_trackMatrix',"101316",{
+message:e.message,
+key:key,
+type:type},
+1]);
+}
+}
+};
+return ret;
+}();
+}

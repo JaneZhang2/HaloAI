@@ -1,0 +1,69 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+var _fixUnit=require('./fixUnit');var _fixUnit2=_interopRequireDefault(_fixUnit);
+var _normalizeColor=require('./../../modules/react-lib/normalizeColor');var _normalizeColor2=_interopRequireDefault(_normalizeColor);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+var colorToRgba=function(input,alfa){
+var int32Color=(0,_normalizeColor2.default)(input);
+if(int32Color===null){
+return input;
+}
+
+int32Color=int32Color||0;
+
+var r=(int32Color&0xff000000)>>>24;
+var g=(int32Color&0x00ff0000)>>>16;
+var b=(int32Color&0x0000ff00)>>>8;
+var a=parseFloat(alfa);
+if(isNaN(a)){
+return'rgb('+r+', '+g+', '+b+')';
+}else{
+return'rgba('+r+', '+g+', '+b+', '+a+')';
+}
+
+};
+
+
+
+
+
+
+
+
+
+var fixBoxShadow=function(style,result){
+var value=[];
+if(style.shadowOffset){
+value.push((0,_fixUnit2.default)(style.shadowOffset.width||0,'width'));
+value.push((0,_fixUnit2.default)(style.shadowOffset.height||0,'height'));
+}
+if(style.shadowRadius){
+value.push((0,_fixUnit2.default)(style.shadowRadius,'shadowRadius'));
+}
+if(style.shadowColor){
+var shadowOpacity=parseFloat(style.shadowOpacity);
+value.push(
+isNaN(shadowOpacity)?
+style.shadowColor:
+colorToRgba(style.shadowColor,shadowOpacity));
+
+delete style['shadowOpacity'];
+}
+if(value.length>0){
+result.boxShadow=value.join(' ');
+}
+};
+
+
+
+var boxShadowObj={
+names:{
+shadowOffset:true,
+shadowRadius:true,
+shadowColor:true,
+shadowOpacity:true},
+
+handle:fixBoxShadow};exports.default=
+
+
+boxShadowObj;module.exports=exports['default'];

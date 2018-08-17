@@ -1,0 +1,44 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+var _index=require("./../../../apis/Dimensions/index.web");var _index2=_interopRequireDefault(_index);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+var cw_scale=_index2.default.get('window').scale;
+
+function getCumulativeOffset(obj){
+var left=obj.offsetLeft,
+top=obj.offsetTop;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+return{
+x:left,
+y:top};
+
+}
+
+
+function getLayout(element){
+var rect=getCumulativeOffset(element);
+
+return{
+x:rect.x/cw_scale,
+y:rect.y/cw_scale,
+width:element.offsetWidth/cw_scale,
+height:element.offsetHeight/cw_scale};
+
+}exports.default=
+
+getLayout;module.exports=exports["default"];

@@ -1,0 +1,78 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _index=require('./../../apis/Dimensions/index.web');var _index2=_interopRequireDefault(_index);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+var flexStyle='box-sizing: border-box;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;-webkit-box-orient: vertical;-webkit-box-direction: normal;-webkit-flex-direction: column;-ms-flex-direction: column;flex-direction: column;';
+
+var document=global.document;
+var divFontSizeStyle=global.fontSizeBase?"":'font-size: 0.14rem;';
+var htmlFontSizeStyle=global.fontSizeBase?''+global.fontSizeBase:'100';
+
+
+
+
+
+
+
+
+
+function getFontSizeBase(orifontsizebase){
+if(typeof global.getComputedStyle!=='function'){
+return orifontsizebase;
+}
+var $dom=document.createElement('div');
+$dom.style.fontSize='14px';
+document.body.appendChild($dom);
+
+var realDivFontSize=parseInt(global.getComputedStyle($dom,undefined).fontSize);
+var realFSB=parseFloat(orifontsizebase)*14/realDivFontSize;
+document.body.removeChild($dom);
+return realFSB.toString();
+}
+htmlFontSizeStyle=getFontSizeBase(htmlFontSizeStyle);
+
+var fontFamilyBase=global.fontFamilyBase?''+global.fontFamilyBase:'-apple-system,"Segoe UI",Roboto, "Open Sans","Helvetica Neue",sans-serif';
+
+var cw_scale=_index2.default.get('window').scale;
+global.fontSizeBase=htmlFontSizeStyle;
+htmlFontSizeStyle=htmlFontSizeStyle*cw_scale;
+global.fontSizeBaseScale=htmlFontSizeStyle;
+
+
+
+var css='html {font-size: '+
+htmlFontSizeStyle+'px;overflow:hidden;height:100%;font-family: '+fontFamilyBase+'}\nbody {margin: 0;height:100%;line-height: 1.2;-webkit-text-size-adjust: 100% !important;}\n.rn-view,.rn-flex {position: relative;flex:0 0 auto;-webkit-flex:0 0 auto;'+
+
+flexStyle+'}\n.root-tag{width:100%;position:relative;z-index:1;display:flex;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;flex:1;-webkit-flex:1;height: 100%;}\n.rn-root{position:absolute;top: 0;left: 0;right: 0;bottom: 0;'+
+
+flexStyle+'}\n.rn-global-compontent{position:absolute;top: 0;left: 0;right: 0;bottom: 0;'+
+flexStyle+'}\ndiv,span,img {border-width: 0;border-style: solid;'+
+divFontSizeStyle+';}\nspan {box-sizing:border-box;}\ndiv,span,img {outline: none;-webkit-tap-highlight-color: transparent;}\ninput:focus{outline:0;} input::-webkit-input-placeholder {color:rgb(212, 212, 212);font-weight: 300;} input:-moz-placeholder { color:rgb(212, 212, 212);} input:-ms-input-placeholder {color:rgb(212, 212, 212);}\n.rn-hidden {display:none;} .pointer-events-none {pointer-events: none;} .pointer-events-auto {pointer-events: auto;} .pointer-events-box-none {pointer-events: none;}\n.pointer-events-box-none * {pointer-events: auto;} .pointer-events-box-only {pointer-events: auto;} .pointer-events-box-only * {pointer-events: none;}\n.rn-text > .rn-view{display:inline-block;} .rn-text > .rn-text {display:inline;font-size:inherit;}\n.resize-triggers {visibility: hidden;opacity: 0;z-index: -1;}\n.resize-triggers,\n.expand-trigger,\n.contract-trigger,\n.contract-trigger:before {content: " ";display: block;position: absolute;top: 0;left: 0;height: 100%;width: 100%;overflow: hidden;}\n.contract-trigger:before {width: 200%;height: 200%;}\n.rn-scroller-vert{will-change: transform, -webkit-transform, -moz-transform;-webkit-will-change: transform, -webkit-transform, -moz-transform;-moz-will-change: transform, -webkit-transform, -moz-transform;min-height:100%;width:100%;}\n.rn-scroller-hori{will-change: transform, -webkit-transform, -moz-transform;-webkit-will-change: transform, -webkit-transform, -moz-transform;-moz-will-change: transform, -webkit-transform, -moz-transform;min-width:100%;flex:1;-webkit-flex:1;}\n.crnweb-mask{background-color: rgba(0,0,0,.5);} .rn-scroller-hori > *{flex-shrink:0;-webkit-flex-shrink:0;}\n@keyframes slideleftin {from {-webkit-transform: translateX(-50%);transform: translateX(-50%);opacity: 0} to {-webkit-transform: translateX(0px);transform: translateX(0px);opacity: 1}}\n@-webkit-keyframes slideleftin {from {-webkit-transform: translateX(-50%);opacity: 0}to {-webkit-transform: translateX(0px);opacity: 1}}\n@keyframes sliderightin {from {-webkit-transform: translateX(50%);transform: translateX(50%);opacity: 0}to {-webkit-transform: translateX(0px);opacity: 1}}\n@-webkit-keyframes sliderightin {from {-webkit-transform: translateX(50%);opacity: 0} to {-webkit-transform: translateX(0px);opacity: 1}}\n.slideleftin {-webkit-animation: slideleftin 350ms ease-in-out;animation: slideleftin 350ms ease-in-out}\n.sliderightin {-webkit-animation: sliderightin 350ms ease-in-out;animation: sliderightin 350ms ease-in-out}\n@keyframes slidedownin {from {-webkit-transform: translateY(50%);transform: translateY(50%); opacity: 0 } to {-webkit-transform: translateY(0px);opacity: 1}}\n@-webkit-keyframes slidedownin {from {-webkit-transform: translateY(50%);transform: translateY(50%);opacity: 0} to {-webkit-transform: translateY(0px);opacity: 1}}\n@keyframes slideupin {from {-webkit-transform: translateY(50%);transform: translateY(50%);opacity: 0} to {-webkit-transform: translateY(0px);opacity: 1}}\n@-webkit-keyframes slideupin {from {-webkit-transform: translateY(-50%);transform: translateY(-50%);opacity: 0} to {-webkit-transform: translateY(0px);opacity: 1}}\n.slidedownin {-webkit-animation: slidedownin 350ms ease-in-out;animation: slidedownin 350ms ease-in-out}\n.slideupin {-webkit-animation: slideupin 350ms ease-in-out;animation: slideupin 350ms ease-in-out}\n.animatestart {position: absolute;top: 0;left: 0;z-index: 9999;width: 100%;height: 100%;overflow-x: hidden}\n.animationComponent {will-change: opacity, left, top;-webkit-will-change: opacity, left, top;-moz-will-change: opacity, left, top;}';exports.default=
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+css;module.exports=exports['default'];

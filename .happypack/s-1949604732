@@ -1,0 +1,186 @@
+Object.defineProperty(exports,"__esModule",{value:true});exports.default=undefined;var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _Platform=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/Platform/Platform.web');var _Platform2=_interopRequireDefault(_Platform);
+
+
+
+var _isUrl=require('./Util/isUrl');var _isUrl2=_interopRequireDefault(_isUrl);
+var _Log=require('./Log');var _Log2=_interopRequireDefault(_Log);
+var _Device=require('./Device');var _Device2=_interopRequireDefault(_Device);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var
+
+URL=function(){function URL(){_classCallCheck(this,URL);}_createClass(URL,null,[{key:'canOpenURL',value:function canOpenURL(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+url,callback){
+if(!(0,_isUrl2.default)(url)){
+callback(false);
+}else{
+callback(true);
+}
+}},{key:'openURL',value:function openURL(
+
+url,option){var
+
+
+
+
+urlForTest;if(_Platform2.default.isInApp){URL.openHybrid(url,option);}else{urlForTest=url;
+if(!/^http/.test(urlForTest)){
+urlForTest=location.origin+url;
+}
+if(!(0,_isUrl2.default)(urlForTest)){
+return;
+}
+global.location.href=url;
+}
+}},{key:'openHybrid',value:function openHybrid(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+url){var opt=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+
+try{
+if(global.CtripUtil){
+if(opt.targetModel===1||/^ctrip:\/\//i.test(url)){
+CtripUtil.app_open_url(url,1,opt.title||'',opt.pageName||'');
+}else if(opt.targetModel===5||url.indexOf('CRNType=1')>-1){
+
+CtripUtil.app_open_url(url,5,opt.title||'',opt.pageName||'');
+}else if(opt.targetModel===4||/^\//.test(url)){
+
+CtripUtil.app_open_url(url,4,opt.title||'',opt.pageName||'');
+}else if(opt.targetModel===0){
+
+CtripUtil.app_open_url(url,0,opt.title||'',opt.pageName||'');
+}else if(opt.targetModel===2||/^http(s)?:/i.test(url)){
+
+CtripUtil.app_open_url(url,2,opt.title||'',opt.pageName||'');
+}else{
+
+CtripUtil.app_open_url(url,3,opt.title||'',opt.pageName||'');
+}
+}else{
+var msg='CtripUtil is not exist in hybrid or directConnect';
+console.log(msg);
+_Log2.default.logTrace("cw_msg_CtripUtil",{msg:e.message,info:msg});
+}
+}catch(e){
+console.log(e);
+_Log2.default.logTrace("cw_msg_openHybrid",{msg:e.message});
+}
+
+}},{key:'openURLWithTitle',value:function openURLWithTitle(
+
+url){var title=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'';
+var segChar=url.indexOf('?')>-1?"&":'?';
+if(title){
+url=url+segChar+'crnWebTitle='+title;
+}
+if(!(0,_isUrl2.default)(url)){
+return;
+}
+global.location.href=url;
+}},{key:'openURLWithCallback',value:function openURLWithCallback(
+
+
+
+
+
+
+
+
+
+url,callback,options){
+if(!(0,_isUrl2.default)(url)){
+return;
+}
+
+
+
+
+if(options&&options.openType&&options.openType=='replace'){
+global.location.replace(url);
+}else{
+global.location.href=url;
+}
+
+}},{key:'openURLWithTitleAndCallback',value:function openURLWithTitleAndCallback(
+
+
+
+
+
+
+
+
+url){var title=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'';var callback=arguments[2];
+var segChar=url.indexOf('?')>-1?"&":'?';
+if(title){
+url=url+segChar+'crnWebTitle='+title;
+}
+if(!(0,_isUrl2.default)(url)){
+return;
+}
+if(callback){
+setTimeout(function(){
+if(callback){
+callback();
+}
+},3000);
+global.open(url);
+}else{
+global.location.href=url;
+}
+}},{key:'openURLWithDefaultBrowser',value:function openURLWithDefaultBrowser(
+
+
+
+
+
+url){
+if(_Platform2.default.isInApp&&_Device2.default.deviceType==='android'){
+if(CtripUtil&&CtripUtil.app_open_url){
+
+CtripUtil.app_open_url(url,6);
+}
+}else{
+this.openURL(url);
+}
+}}]);return URL;}();exports.default=URL;module.exports=exports['default'];

@@ -1,0 +1,57 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
+
+
+
+
+var isServer=typeof window==="undefined";
+if(isServer){
+global.screen={width:0,height:0};
+}
+var __cw_getScale=function(){
+var scale=1,
+
+metaEl,
+
+match;if(global.document){metaEl=global.document.querySelector('meta[name="viewport"]');if(metaEl){match=metaEl.getAttribute('content').match(/initial\-scale=([\d\.]+)/);
+if(match){
+scale=parseFloat(match[1]);
+}
+}
+}
+
+return 1/scale;
+};
+var __cw_scale=__cw_getScale();
+
+var dimensions={
+
+window:{
+get width(){
+if(isServer){
+return 0;
+}
+return global.document.documentElement.clientWidth/__cw_scale;
+},
+get height(){
+if(isServer){
+return 0;
+}
+return global.document.documentElement.clientHeight/__cw_scale||global.screen.height;
+},
+get scale(){return __cw_scale||1;}},
+
+modalFullscreenView:{
+width:global.screen.width,
+height:global.screen.height}};var
+
+
+
+Dimensions=function(){function Dimensions(){_classCallCheck(this,Dimensions);}_createClass(Dimensions,null,[{key:'get',value:function get(
+dim){
+if(!dim){dim="window";}
+return dimensions[dim];
+}}]);return Dimensions;}();exports.default=
+
+
+
+Dimensions;module.exports=exports['default'];

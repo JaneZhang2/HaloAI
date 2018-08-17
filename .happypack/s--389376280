@@ -1,0 +1,28 @@
+
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});
+var runEnv="h5";
+if(global.document){
+runEnv=global.navigator.userAgent.indexOf("_CtripWireless")>0?global.location.protocol!="file:"?"directConnect":'hybrid':'h5';
+}else{
+runEnv="server";
+}
+
+var Platform={
+browser:true,
+OS:'web',
+isInApp:runEnv==="directConnect"||runEnv==="hybrid",
+isDirectConnect:runEnv==="directConnect",
+isHybrid:runEnv==="hybrid",
+isH5:runEnv==="h5",
+isServer:runEnv==="server",
+UA:global.navigator&&global.navigator.userAgent,
+get Version(){
+return Platform.UA;
+},
+select:function select(obj){return obj&&obj.web;}};exports.default=
+
+
+Platform;module.exports=exports["default"];

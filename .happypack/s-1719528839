@@ -1,0 +1,256 @@
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
+var timeHash={};
+var Max_LOG_LENGTH=8*1000;
+var noop=function(){};
+var pushUbt=function(obj){
+if(!global.__bfi){
+global.__bfi=[];
+}
+global.__bfi.push(obj);
+};
+var Y={
+now:Date.now||function(){return new Date().getTime();}};var
+
+
+
+
+
+
+Log=function(){function Log(){_classCallCheck(this,Log);}_createClass(Log,null,[{key:'logPage',value:function logPage(
+
+
+
+
+
+
+
+
+
+
+
+page){var info=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+info.page_id=page;
+pushUbt(["_asynRefresh",info]);
+}},{key:'logCode',value:function logCode(
+
+
+
+
+
+
+
+
+
+
+
+
+code){var info=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+Log.logTrace(code,info);
+}},{key:'logTrace',value:function logTrace(
+
+
+
+
+
+
+
+
+
+
+
+
+traceName){var info=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+var sInfo=JSON.stringify(info);
+if(encodeURIComponent(sInfo).length>Max_LOG_LENGTH){
+
+console.error('[logTrace]log length is too long,after encodeURIComponent,more than 8k.',traceName,info);
+}
+pushUbt(['_tracklog',traceName,sInfo]);
+}},{key:'logMetric',value:function logMetric(
+
+
+
+
+
+
+
+
+
+
+
+
+
+metricName,metricValue){var info=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};
+pushUbt(['_trackMetric',{
+name:metricName,
+value:metricValue,
+tag:info}]);
+
+}},{key:'logMonitor',value:function logMonitor(
+
+
+
+
+
+
+
+
+
+
+
+
+
+monitorName,monitorValue){var info=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};
+pushUbt(['_trackMetric',{
+name:monitorName,
+value:monitorValue,
+tag:info,
+sample:100}]);
+
+}},{key:'trackJSLog',value:function trackJSLog(
+
+
+
+
+
+
+
+
+
+
+
+
+code){var info=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+if(arguments.length===1){
+info=code;
+code="102005";
+}
+Log.logTrace(code,info);
+}},{key:'send',value:function send(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+type,options){var
+
+
+
+
+
+callback;if(!type||!options){return;}switch(type){case'pv':callback=options.callback||noop;
+delete options.callback;
+pushUbt(["_asynRefresh",options,callback]);
+break;
+case'tracelog':
+pushUbt(['_tracklog',options.name||"",options.value||"",options.callback||noop]);
+break;
+case'metric':
+pushUbt(['_trackMetric',options]);
+break;
+case'error':
+pushUbt(['_trackError',options]);
+break;}
+
+}},{key:'time',value:function time(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+name,options){
+if(typeof name!=='string'){
+throw new TypeError("[time]name must be a string.");
+}
+
+timeHash[name]={
+value:Y.now(),
+options:options||{}};
+
+}},{key:'timeEnd',value:function timeEnd(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+name,options){
+if(typeof name!=='string'){
+throw new TypeError("[timeEnd]name must be a string.");
+}
+
+var o=timeHash[name],
+
+v,
+param;if(o&&o.value){v=Y.now()-o.value;param=_extends(o.options,options||{});
+if(param.name){
+param.value=v;
+pushUbt(['_trackMetric',param]);
+}
+delete timeHash[name];
+return v;
+}else{
+delete timeHash[name];
+}
+}}]);return Log;}();exports.default=Log;module.exports=exports['default'];

@@ -1,0 +1,293 @@
+
+
+
+
+
+
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=undefined;var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _get=function get(object,property,receiver){if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property),parent,getter;if(desc===undefined){parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else{return get(parent,property,receiver);}}else if("value"in desc){return desc.value;}else{getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);var _Navigator=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Navigator/Navigator.web');var _Navigator2=_interopRequireDefault(_Navigator);
+
+
+
+
+var _invariant=require('fbjs/lib/invariant');var _invariant2=_interopRequireDefault(_invariant);
+
+var _getUrlParams=require('./Util/getUrlParams');var _getUrlParams2=_interopRequireDefault(_getUrlParams);
+
+var _Navigation=require('./Navigation');var _Navigation2=_interopRequireDefault(_Navigation);
+var _NavigationBarConfig=require('./NavigationBarConfig');var _NavigationBarConfig2=_interopRequireDefault(_NavigationBarConfig);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+NavigationBar=function(_Navigator$Navigation){_inherits(NavigationBar,_Navigator$Navigation);function NavigationBar(){_classCallCheck(this,NavigationBar);return _possibleConstructorReturn(this,(NavigationBar.__proto__||Object.getPrototypeOf(NavigationBar)).apply(this,arguments));}_createClass(NavigationBar,[{key:'render',value:function render()
+{
+if(this.props.hide){
+return null;
+}
+
+return _react2.default.createElement(_Navigator2.default.NavigationBar,this.props);
+}}]);return NavigationBar;}(_Navigator2.default.NavigationBar);
+
+
+(function(global){
+
+var defineProperty=function(obj,propertyName,value,descriptor){
+var descriptor=descriptor||{
+writable:true,
+configurable:false,
+enumerable:false};
+
+descriptor.value=descriptor.value===undefined?value:descriptor.value;
+Object.defineProperty(obj,propertyName,descriptor);
+},
+
+
+
+
+
+
+
+
+
+
+routes;var fnPush=function(arr){if(!arr.originPush){defineProperty(arr,"originPush",arr.push);}};var originPages=global.__cwpages;if(!originPages){global.__cwpages=originPages=[];routes=originPages.routes=originPages.routes||{};
+fnPush(originPages);
+defineProperty(originPages,"push",function(pages){
+if(!(pages instanceof Array))
+{
+pages=[pages];
+}
+pages.forEach(function(route){
+
+if(!route.name){
+route.name=route.component&&route.component.WrappedComponent&&route.component.WrappedComponent.name||"";
+}
+route.pathname="";
+if(route.name.indexOf("/")==0){
+route.pathname=route.name;
+}else{
+route.pathname="/"+route.name;
+}
+if(route.isInitialPage==true){
+route.pathname=route.pathname||"/index";
+route.aliasName=route.name;
+routes["/"]=route;
+}
+routes[route.pathname]=route;
+
+originPages.originPush(route);
+defineProperty(originPages,"routes",routes);
+});
+});
+
+}else{
+fnPush(originPages);
+}
+})(global);var
+
+App=function(_Component){_inherits(App,_Component);
+function App(props){_classCallCheck(this,App);var _this2=_possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).call(this,
+props));_this2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+navigatorRef=null;_this2.url=_this2.props.url;_this2.urlQuery=_this2.props.urlQuery||{};return _this2;}_createClass(App,[{key:'init',value:function init(_ref){var pages=_ref.pages,navigationBarConfig=_ref.navigationBarConfig;global.__cwpages.push(pages);this.pages=global.__cwpages;this.navigationBarHidden=navigationBarConfig&&navigationBarConfig.hide||false;this.navigationBarColor=navigationBarConfig&&navigationBarConfig.color||navigationBarConfig&&navigationBarConfig.backgroundColor||'rgb(9, 159, 222)';this.backNoAnimated=navigationBarConfig&&navigationBarConfig.backNoAnimated||false;this._attchUnloadEvent();}},{key:'initAsync',value:function initAsync(_ref2){var pages=_ref2.pages,navigationBarConfig=_ref2.navigationBarConfig,loadingPage=_ref2.loadingPage;(0,_invariant2.default)(loadingPage,'please input loadingPage');pages=[{component:loadingPage,name:'loadingpage',isInitialPage:true}].concat(pages);this.init({pages:pages,navigationBarConfig:navigationBarConfig});}},{key:'_attchUnloadEvent',value:function _attchUnloadEvent(){var cb=function(){if(global.currentApp.pageInstance&&currentApp.pageInstance.pageDidDisappear){global.currentApp.pageInstance.pageDidDisappear();}};if(global.attachEvent){global.attachEvent('onbeforeunload',cb);}else{if(global.document){var iphone=global.navigator.userAgent.match(/(iPhone\sOS)\s([\d_]+)/);if(iphone){global.addEventListener('pagehide',cb,false);}else{global.addEventListener('beforeunload',cb,false);}}}}},{key:'componentWillMount',value:function componentWillMount(){this.navigation=new _Navigation2.default(this);global.currentApp=this;global.currentApp.isScrolling=false;global.currentApp.isCheckKeyborad=false;global.currentApp.CRNWEB_VERSION=WEBPACK_CRNWEB_VERSION;global.currentApp.CW_VERSION=WEBPACK_CW_VERSION;}},{key:'componentDidMount',value:function componentDidMount(){this.navigation.navigator=this.navigatorRef;}},{key:'componentWillUnmount',value:function componentWillUnmount(){}},{key:'_onBackAndroid',value:function _onBackAndroid(){var page=this.navigation.getCurrentRoute();page&&page.pageContext&&page.pageContext.onBackAndroid&&page.pageContext.onBackAndroid();return true;}},{key:'render',value:function render()
+
+{var _this3=this;
+var navigationBarMaperConfig=new _NavigationBarConfig2.default();
+
+return(
+_react2.default.createElement(_Navigator2.default,{
+_webRouteStack:this.pages,
+ref:function ref(ins){
+_this3.navigatorRef=ins;
+},
+initialRoute:this.navigation.initialPage(),
+configureScene:function configureScene(route){
+if(route.sceneConfig){
+return route.sceneConfig;
+}
+return null;
+},
+navigationBar:
+_react2.default.createElement(NavigationBar,{
+hide:this.navigationBarHidden,
+routeMapper:navigationBarMaperConfig.mapper,
+style:{backgroundColor:this.navigationBarColor,overflow:'hidden'}}),
+
+renderUrlTitle:
+function renderUrlTitle(){
+var search=global.location&&global.location.search||"";
+var params=(0,_getUrlParams2.default)(search);
+return params&&params.crnWebTitle||"";
+},
+
+renderScene:function renderScene(route){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var PageComponent=function(WrappedComponent){return function(_WrappedComponent){_inherits(ClassNameEnhancer,_WrappedComponent);function ClassNameEnhancer(){_classCallCheck(this,ClassNameEnhancer);return _possibleConstructorReturn(this,(ClassNameEnhancer.__proto__||Object.getPrototypeOf(ClassNameEnhancer)).apply(this,arguments));}_createClass(ClassNameEnhancer,[{key:'componentWillMount',value:function componentWillMount(){var _get2,_len,args,_key;for(_len=arguments.length,args=Array(_len),_key=0;_key<_len;_key++){args[_key]=arguments[_key];}_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'componentWillMount',this)&&(_get2=_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'componentWillMount',this)).call.apply(_get2,[this].concat(args));_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'_onWillShow',this)&&_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'_onWillShow',this).call(this,route);}},{key:'componentDidMount',value:function componentDidMount(){var _get3,_get4,_len2,args,_key2;if(currentApp&&currentApp.isPopPage==true){currentApp.isPopPage=false;}else{for(_len2=arguments.length,args=Array(_len2),_key2=0;_key2<_len2;_key2++){args[_key2]=arguments[_key2];}_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'componentDidMount',this)&&(_get3=_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'componentDidMount',this)).call.apply(_get3,[this].concat(args));_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'pageDidAppear',this)&&(_get4=_get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'pageDidAppear',this)).call.apply(_get4,[this].concat(args));currentApp.isPopPage=false;}}},{key:'render',value:function render(){route.pageContext=this;return _get(ClassNameEnhancer.prototype.__proto__||Object.getPrototypeOf(ClassNameEnhancer.prototype),'render',this).call(this);}}]);return ClassNameEnhancer;}(WrappedComponent);}(route.component);
+if(route.component.name||route.component.displayName){
+PageComponent.displayName=(route.component.displayName||route.component.name)+"Enhancer";
+}
+return(
+_react2.default.createElement(PageComponent,_extends({},route.params,{page:route,navigation:_this3.navigation,app:_this3})));
+
+},
+
+onWillFocus:
+function onWillFocus(route){
+route.component&&route.component.prototype._onWillShow&&route.component.prototype._onWillShow(route);
+},
+
+
+onDidFocus:
+function onDidFocus(route){
+route.component&&route.component.prototype._onDidShow&&route.component.prototype._onDidShow(route);
+}}));
+
+
+
+}}],[{key:'addPages',value:function addPages(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pages){
+if(pages){
+global.__cwpages.push(pages);
+}
+}},{key:'addPage',value:function addPage(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+page){
+if(page){
+global.__cwpages.push([page]);
+}
+}}]);return App;}(_react.Component);exports.default=App;module.exports=exports['default'];

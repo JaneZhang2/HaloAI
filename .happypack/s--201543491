@@ -1,0 +1,24 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};
+
+var _setValueForStyles=require('./../../setValueForStyles');var _setValueForStyles2=_interopRequireDefault(_setValueForStyles);
+var _StyleSheet=require('./../../../apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+var setNativeProps=function(node,props,component){var
+
+
+
+
+
+style;for(var name in props){if(name==='style'){(0,_setValueForStyles2.default)(node,_StyleSheet2.default.fix(props[name]),component);}else if(name==='pointerEvents'){style=_extends({},
+props.style,{
+pointerEvents:props['pointerEvents']});
+
+(0,_setValueForStyles2.default)(node,style,component);
+}else{
+node.setAttribute(name,props[name]);
+if(node.props)node.props[name]=props[name];
+}
+}
+};exports.default=
+
+setNativeProps;module.exports=exports['default'];

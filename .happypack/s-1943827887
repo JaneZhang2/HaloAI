@@ -1,0 +1,22 @@
+
+
+
+
+
+
+
+
+
+
+'use strict';var _AppRegistry=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/AppRegistry/AppRegistry.web');var _AppRegistry2=_interopRequireDefault(_AppRegistry);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+
+
+
+var theCompnent=require('./main');
+
+_AppRegistry2.default.registerComponent('HaloAI',function(){return theCompnent;});
+
+
+module.exports=theCompnent;

@@ -1,0 +1,1547 @@
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp;
+var _react=require('react');var _react2=_interopRequireDefault(_react);
+var _reactDom=require('react-dom');var _reactDom2=_interopRequireDefault(_reactDom);
+var _StyleSheet=require('./../../apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);
+var _index=require('./../../apis/PanResponder/index.web');var _index2=_interopRequireDefault(_index);
+var _View=require('./../../components/View/View.web');var _View2=_interopRequireDefault(_View);
+var _Resizable=require('./Resizable');var _Resizable2=_interopRequireDefault(_Resizable);
+var _index3=require('./../../components/TextInput/index.web');
+
+var _index4=require('./../../modules/wrapper/NativeMethodsWrapper/index.web');var _index5=_interopRequireDefault(_index4);
+
+var _fastdom=require('fastdom');var _fastdom2=_interopRequireDefault(_fastdom);
+
+var _deepDiffer=require('./../../modules/react-lib/deepDiffer');var _deepDiffer2=_interopRequireDefault(_deepDiffer);
+var _index6=require('./../../apis/Dimensions/index.web');var _index7=_interopRequireDefault(_index6);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
+
+var _cw_scale=_index7.default.get('window').scale;
+
+var noop=function(){};
+var globalMoving=false;
+
+var BOUNCETIME=600;
+var PAGEINGTIME=300;
+var SCROLLTO_DURATION=300;
+var SCROLLMOVE_THRESHOLD=8;
+var SCROLLMOVE_TIME=300;
+var INDICATOR_WIDTH=2.5;
+var INDICATOR_MIN_SHOW_LENGTH=40;
+var INDICATOR_MIN_SHOW_WIDTH=40;
+var INDICATOR_GAP=6;
+var INDICATOR_GAP_EDGE=3;
+var INDICATOR_OPACITY=0.4;
+var commonTransform="transform";
+if(global.document){
+commonTransform='transform'in global.document.body.style?'transform':'webkitTransform';
+}
+
+
+
+
+var isiPhoneOrOPPOR9=false;
+if(global.document){
+isiPhoneOrOPPOR9=function(){
+var iphone=navigator.userAgent.match(/(iPhone\sOS)\s([\d_]+)/);
+var OPPOR9=navigator.userAgent.match(/(OPPO\sR9m)/);
+return!!(iphone||OPPOR9);
+}();
+}
+
+
+
+
+
+
+var styles=_StyleSheet2.default.create({
+
+
+
+
+
+
+
+
+
+scrollView:{
+position:'relative',
+
+flex:"1 1 auto",
+maxHeight:"100%",
+overflow:'hidden',
+transformStyle:'preserve-3d',
+touchAction:'none',
+zIndex:0},
+
+
+
+
+
+
+
+
+
+
+scroller:{
+transitionProperty:"transform",
+transform:[{
+translateX:0},
+{
+translateY:0},
+{
+translateZ:0}],
+
+position:'relative'},
+
+scrollerHorizontal:{
+alignSelf:'flex-start',
+flexDirection:'row'},
+
+
+refreshControl:{
+position:'absolute',
+left:0,
+right:0},
+
+
+indicator:{
+position:'absolute',
+borderWidth:1,
+borderColor:'#444',
+borderRadius:1,
+backgroundColor:'#444',
+opacity:0,
+width:0,
+height:0,
+transform:[{
+translateX:0},
+{
+translateY:0},
+{
+translateZ:0}],
+
+zIndex:3},
+
+
+indicatorHorizontal:{
+height:INDICATOR_WIDTH,
+bottom:INDICATOR_GAP_EDGE,
+left:INDICATOR_GAP},
+
+
+indicatorVertical:{
+width:INDICATOR_WIDTH,
+right:INDICATOR_GAP_EDGE,
+top:INDICATOR_GAP},
+
+
+stickyWrapper:{
+position:'absolute',
+left:0,
+top:0,
+right:0,
+zIndex:2}});
+
+
+
+var _vendor='';
+if(global.document){
+var _elementStyle=global.document.createElement('div').style;
+_vendor=function(){
+var vendors=['t','webkitT','MozT','msT','OT'],
+transform=void 0,
+i=0,
+l=vendors.length;
+
+for(;i<l;i++){
+transform=vendors[i]+'ransform';
+if(transform in _elementStyle)return vendors[i].substr(0,vendors[i].length-1);
+}
+
+return false;
+}();
+}
+
+
+function _prefixStyle(style){
+if(_vendor===false)return false;
+if(_vendor==='')return style;
+return _vendor+style.charAt(0).toUpperCase()+style.substr(1);
+}
+
+var utils={
+style:{
+transform:_prefixStyle('transform'),
+transitionTimingFunction:_prefixStyle('transitionTimingFunction'),
+transitionDuration:_prefixStyle('transitionDuration'),
+transitionDelay:_prefixStyle('transitionDelay'),
+transformOrigin:_prefixStyle('transformOrigin'),
+touchAction:_prefixStyle('touchAction')},
+
+getTime:Date.now||function(){
+return new Date().getTime();
+},
+ease:{
+quadratic:{
+style:'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+fn:function fn(k){
+return k*(2-k);
+}},
+
+circular:{
+style:'cubic-bezier(0.1, 0.57, 0.1, 1)',
+fn:function fn(k){
+return Math.sqrt(1- --k*k);
+}},
+
+back:{
+style:'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+fn:function fn(k){
+var b=4;
+return(k=k-1)*k*((b+1)*k+b)+1;
+}},
+
+bounce:{
+style:'',
+fn:function fn(k){
+if((k/=1)<1/2.75){
+return 7.5625*k*k;
+}else if(k<2/2.75){
+return 7.5625*(k-=1.5/2.75)*k+0.75;
+}else if(k<2.5/2.75){
+return 7.5625*(k-=2.25/2.75)*k+0.9375;
+}else{
+return 7.5625*(k-=2.625/2.75)*k+0.984375;
+}
+}},
+
+elastic:{
+style:'',
+fn:function fn(k){
+var f=0.22;
+
+
+if(k===0){
+return 0;
+}
+if(k===1){
+return 1;
+}
+
+return 0.4*Math.pow(2,-10*k)*Math.sin((k-f/4)*(2*Math.PI)/f)+1;
+}}},
+
+
+momentum:function momentum(current,start,time,lowerMargin,wrapperSize,deceleration){
+var distance=current-start,
+speed=Math.abs(distance)/time,
+destination=void 0,
+duration=void 0;
+
+deceleration=deceleration===undefined?0.006:deceleration;
+
+destination=current+speed*speed/(2*deceleration)*(distance<0?-1:1);
+duration=speed/deceleration;
+
+if(destination<lowerMargin){
+destination=wrapperSize?lowerMargin-wrapperSize/2.5*(speed/8):lowerMargin;
+distance=Math.abs(destination-current);
+duration=distance/speed;
+}else if(destination>0){
+destination=wrapperSize?wrapperSize/2.5*(speed/8):0;
+distance=Math.abs(current)+destination;
+duration=distance/speed;
+}
+
+return{
+destination:Math.round(destination),
+duration:duration};
+
+},
+
+
+
+
+getDeceleration:function getDeceleration(deceleration){
+
+
+
+if(typeof deceleration==='string'){
+if(deceleration==='slow'){
+return(1-0.94).toFixed(4);
+}
+if(deceleration==='fast'){
+return(1-0.9994).toFixed(4);
+}
+if(deceleration==='normal'){
+return(1-0.994).toFixed(4);
+}
+}
+deceleration=isNaN(deceleration)?0:deceleration;
+return(1-deceleration).toFixed(4);
+}};var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ScrollView=(_temp=_class=function(_Component){_inherits(ScrollView,_Component);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function ScrollView(props){_classCallCheck(this,ScrollView);var _this2=_possibleConstructorReturn(this,(ScrollView.__proto__||Object.getPrototypeOf(ScrollView)).call(this,
+props));
+
+_this2.state={
+isRefreshing:false,
+isLoading:false,
+refreshResult:undefined,
+stickyItemIndex:null,
+indicatorVerticalHeight:0,
+indicatorHorizontalWidth:0};
+
+
+
+
+
+
+_this2.contentOffset={
+x:_this2.props.contentOffset&&_this2.props.contentOffset.x||0,
+y:_this2.props.contentOffset&&_this2.props.contentOffset.y||0};
+
+
+_this2.stateUnlockDelay=100;
+_react2.default.getFrameSpeed(function(frameSpeed){
+_this2.stateUnlockDelay=Math.min(100,frameSpeed*2);
+});
+_this2.curPage=0;
+_this2.curAnimation=-1;
+_this2.animationIdx=0;
+_this2._updateByProps(props);
+_this2.isAnimating=false;
+
+
+_this2.scrollerWidth=0;
+_this2.scrollerHeight=0;
+_this2.minScrollX=0;
+_this2.minScrollY=0;
+_this2.maxScrollX=0;
+_this2.maxScrollY=0;return _this2;
+
+}_createClass(ScrollView,[{key:'_updateByProps',value:function _updateByProps(
+
+props){
+
+this.alwaysBounceHorizontal=props.alwaysBounceHorizontal!==undefined?props.alwaysBounceHorizontal:props.horizontal;
+this.alwaysBounceVertical=props.alwaysBounceVertical!==undefined?props.alwaysBounceVertical:!props.horizontal;
+if(!props.bounces){
+this.alwaysBounceHorizontal=false;
+this.alwaysBounceVertical=false;
+}
+
+if(props.pagingEnabled){
+props.horizontal?this.alwaysBounceVertical=false:this.alwaysBounceHorizontal=false;
+}
+
+
+
+this.showsVerticalScrollIndicator=!props.horizontal?props.showsVerticalScrollIndicator:false;
+this.showsHorizontalScrollIndicator=props.horizontal?props.showsHorizontalScrollIndicator:false;
+
+
+this.deceleration=utils.getDeceleration(props.decelerationRate);
+
+
+
+if(this.props.contentOffset!=props.contentOffset){
+this.contentOffset={
+x:props.contentOffset.x,
+y:props.contentOffset.y};
+
+}
+this.contentInset=_extends({},props.contentInset);
+}},{key:'componentWillMount',value:function componentWillMount()
+
+{
+this._panResponder=_index2.default.create({
+onStartShouldSetPanResponder:this._onStartShouldSetPanResponder.bind(this),
+onStartShouldSetPanResponderCapture:this._onStartShouldSetPanResponderCapture.bind(this),
+onMoveShouldSetPanResponder:this._onMoveShouldSetPanResponder.bind(this),
+onMoveShouldSetPanResponderCapture:this._onMoveShouldSetPanResponderCapture.bind(this),
+onPanResponderGrant:this._onPanResponderGrant.bind(this),
+onPanResponderStart:this._onPanResponderStart.bind(this),
+onPanResponderMove:this._onPanResponderMove.bind(this),
+onPanResponderRelease:this._onPanResponderRelease.bind(this),
+onPanResponderTerminationRequest:this._onPanResponderTerminationRequest.bind(this),
+onPanResponderTerminate:this._onPanResponderTerminate.bind(this)});
+
+
+}},{key:'_scrollHeightHotFix',value:function _scrollHeightHotFix(
+
+node){
+if(node&&node.id!="main"&&node.id!="rootTag"&&node.tagName!="BODY"){
+if((node.style["flex"]||node.style["webkitFlex"]||node.style["webkitBoxFlex"])&&!node.style["height"]&&!node.style["maxHeight"]){
+node.style["height"]="100%";
+}
+this._scrollHeightHotFix(node.parentElement);
+}
+}},{key:'componentDidMount',value:function componentDidMount()
+
+{var _this3=this;
+var props=this.props;
+this.uIdx=null;
+this.wrapper=_reactDom2.default.findDOMNode(this.wrapperRef);
+this.scroller=_reactDom2.default.findDOMNode(this.scrollerRef);
+
+this.loadControl=this.loadControlRef;
+
+
+
+if(!isiPhoneOrOPPOR9){
+
+this._scrollHeightHotFix(this.wrapper);
+}
+
+this.indicatorVertical=_reactDom2.default.findDOMNode(this.indicatorVerticalRef);
+this.indicatorHorizontal=_reactDom2.default.findDOMNode(this.indicatorHorizontalRef);
+
+this.stickyWrapperDOM=_reactDom2.default.findDOMNode(this.stickyWrapperRef);
+
+
+this.stickyHeaderIndices=[];
+if(props.stickyHeaderIndices&&!props.horizontal){
+props.stickyHeaderIndices.forEach(function(item){
+var newItem=props.refreshControl?item+1:item;
+var itemDOM=_this3.scroller.childNodes[newItem]||{};
+_this3.stickyHeaderIndices.push({
+itemIndex:newItem,
+itemDOM:itemDOM,
+itemOffset:itemDOM.offsetTop,
+itemHeight:itemDOM.offsetHeight,
+itemStickState:null});
+
+});
+
+this.stickyItem={
+index:-1,
+state:null,
+transformValue:null};
+
+
+}
+this._scrollTo(-this.contentOffset.x,-this.contentOffset.y);
+}},{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
+
+nextProps){
+this._updateByProps(nextProps);
+}},{key:'componentDidUpdate',value:function componentDidUpdate(
+
+prevProps){var _this4=this;
+
+var props=this.props;
+
+
+if((0,_deepDiffer2.default)(prevProps.stickyHeaderIndices,props.stickyHeaderIndices)){
+this.stickyHeaderIndices=[];
+
+props.stickyHeaderIndices.forEach(function(item){
+var newItem=props.refreshControl?item+1:item;
+var itemDOM=_this4.scroller.childNodes[newItem]||{};
+_this4.stickyHeaderIndices.push({
+itemIndex:newItem,
+itemDOM:itemDOM,
+itemOffset:itemDOM.offsetTop,
+itemHeight:itemDOM.offsetHeight,
+itemStickState:null});
+
+});
+}
+}},{key:'_onStartShouldSetPanResponderCapture',value:function _onStartShouldSetPanResponderCapture()
+
+{
+
+return false;
+}},{key:'_onStartShouldSetPanResponder',value:function _onStartShouldSetPanResponder()
+
+{
+return this.props.scrollEnabled;
+}},{key:'_onPanResponderStart',value:function _onPanResponderStart()
+
+{
+
+}},{key:'_onMoveShouldSetPanResponder',value:function _onMoveShouldSetPanResponder()
+
+{
+return this.props.scrollEnabled&&!globalMoving;
+}},{key:'_onMoveShouldSetPanResponderCapture',value:function _onMoveShouldSetPanResponderCapture()
+
+{
+
+return false;
+}},{key:'_onPanResponderGrant',value:function _onPanResponderGrant(
+
+e,gestureState){
+globalMoving=false;
+var point=e.nativeEvent.touches[0];
+
+this.isMoving=false;
+this.distX=0;
+this.distY=0;
+this.directionX=0;
+this.directionY=0;
+
+this.startTime=utils.getTime();
+this.startX=this.x;
+this.startY=this.y;
+
+this.pointX=point.pageX;
+this.pointY=point.pageY;
+
+this.updateCurPage();
+
+this._toggleIndicator(true);
+this._execEvent('onScrollBeginDrag',gestureState);
+}},{key:'_onPanResponderMove',value:function _onPanResponderMove(
+
+e,gestureState){
+
+
+var timestamp=utils.getTime();
+
+globalMoving=false;
+
+var point=e.nativeEvent.touches[0],
+deltaX=point.pageX-this.pointX,
+deltaY=point.pageY-this.pointY,
+newX=void 0,newY=void 0,
+absDistX=void 0,absDistY=void 0;
+
+this.pointX=point.pageX;
+this.pointY=point.pageY;
+
+this.distX+=deltaX;
+this.distY+=deltaY;
+absDistX=Math.abs(this.distX);
+absDistY=Math.abs(this.distY);
+
+if(timestamp-this.endTime>SCROLLMOVE_TIME&&absDistX<SCROLLMOVE_THRESHOLD&&absDistY<SCROLLMOVE_THRESHOLD){
+return;
+}
+global.currentApp.isScrolling=true;
+this.isMoving=true;
+
+this._checkDismissMode();
+
+newX=this.x+deltaX;
+newY=this.y+deltaY;
+
+if(newX>this.minScrollX||newX<this.maxScrollX){
+newX=this.alwaysBounceHorizontal?this.x+deltaX/3:newX>this.minScrollX?this.minScrollX:this.maxScrollX;
+}
+if(newY>this.minScrollY||newY<this.maxScrollY){
+newY=this.alwaysBounceVertical?this.y+deltaY/3:newY>this.minScrollY?this.minScrollY:this.maxScrollY;
+}
+
+
+this.directionX=deltaX>0?-1:deltaX<0?1:0;
+this.directionY=deltaY>0?-1:deltaY<0?1:0;
+
+
+if(this.props.pagingEnabled&&this.props.horizontal){
+var newPageScrollerX=-(this.curPage+this.directionX)*this.wrapperWidth;
+if(this.directionX<0&&newX>newPageScrollerX||this.directionX>0&&newX<newPageScrollerX){
+newX=newPageScrollerX;
+}
+}
+if(this.props.pagingEnabled&&!this.props.horizontal){
+var newPageScrollerY=-(this.curPage+this.directionY)*this.wrapperHeight;
+if(this.directionY<0&&newY>newPageScrollerY||this.directionY>0&&newY<newPageScrollerY){
+newY=newPageScrollerY;
+}
+}
+
+if(this.x!=newX||this.y!=newY){
+this.curAnimation=-1;
+
+if(this.props.horizontal){
+newY=this.y;
+}else
+{
+newX=this.x;
+}
+this._translate(newX,newY);
+}
+
+
+if(timestamp-this.startTime>SCROLLMOVE_TIME){
+this.startTime=timestamp;
+this.startX=this.x;
+this.startY=this.y;
+}
+this._execEvent('onScroll',gestureState);
+
+e.preventDefault&&e.preventDefault();
+return true;
+}},{key:'_onPanResponderRelease',value:function _onPanResponderRelease(
+
+e,gestureState){var _this5=this;
+globalMoving=false;
+this.props.onResponderRelease&&this.props.onResponderRelease(e);
+
+this._checkShouldPersistTaps(e);
+var momentumX=void 0,
+momentumY=void 0,
+duration=void 0,
+newX=Math.round(this.x),
+newY=Math.round(this.y),
+time=0,
+
+easing=void 0;
+this.endTime=utils.getTime();
+duration=this.endTime-this.startTime;
+
+this.isMoving=false;
+
+
+if(this.props.refreshControl&&!this.state.isRefreshing){
+if(!this.props.horizontal&&newY>this.refreshControlHeight){
+this.startRefreshing(true);
+return;
+}
+}
+
+if(this.props.loadControl){
+if(!this.props.horizontal&&newY<this.maxScrollY-this.loadControlHeight&&!this.props.noPullUpToRefresh){
+this.startLoading(true);
+return;
+}
+}
+
+
+if(this._resetPosition(BOUNCETIME)){
+this._execEvent('onScrollEndDrag',gestureState);
+return;
+}
+
+
+if(this.props.pagingEnabled){
+if(this.props.horizontal){
+var vx=(this.x-this.startX)/duration,
+per=Math.abs(newX)/this.wrapperWidth-this.curPage,
+directionX=vx>0?-1:vx<0?1:0;
+var newPage=directionX===this.directionX&&(per>0.35||Math.abs(vx)>0.4)?this.curPage+=this.directionX:this.curPage;
+
+this._execEvent('onScrollEndDrag',gestureState);
+this._scrollTo(-newPage*this.wrapperWidth,newY,PAGEINGTIME,utils.ease.quadratic,function(){
+_this5._execEvent('onMomentumScrollEnd',gestureState);
+});
+return;
+}else{
+var vy=(this.y-this.startY)/duration,
+_per=Math.abs(newY)/this.wrapperHeight-this.curPage,
+directionY=vy>0?-1:vy<0?1:0;
+var _newPage=directionY===this.directionY&&(_per>0.35||Math.abs(vy)>0.4)?this.curPage+=this.directionY:this.curPage;
+this._execEvent('onScrollEndDrag',gestureState);
+this._scrollTo(newX,-_newPage*this.wrapperHeight,PAGEINGTIME,utils.ease.quadratic,function(){
+_this5._execEvent('onMomentumScrollEnd',gestureState);
+});
+return;
+}
+}
+
+
+
+
+this._execEvent('onScrollEndDrag',gestureState);
+
+
+
+
+
+
+
+
+if(!this.isAnimating&&newX===Math.round(this.x)&&newY===Math.round(this.y)&&duration<SCROLLMOVE_TIME){
+momentumX=this.props.horizontal?utils.momentum(this.x,this.startX,duration,this.maxScrollX,this.wrapperWidth,this.deceleration):{
+destination:newX,
+duration:0};
+
+momentumY=!this.props.horizontal?utils.momentum(this.y,this.startY,duration,this.maxScrollY,this.wrapperHeight,this.deceleration):{
+destination:newY,
+duration:0};
+
+newX=momentumX.destination;
+newY=momentumY.destination;
+time=Math.max(momentumX.duration,momentumY.duration);
+}else
+{
+newX=this.x;
+newY=this.y;
+}
+
+if(newX!==this.x||newY!==this.y){
+if(newX>this.minScrollX||newX<this.maxScrollX){
+if(this.alwaysBounceHorizontal){
+easing=utils.ease.quadratic;
+}else{
+newX=newX>this.minScrollX?this.minScrollX:this.maxScrollX;
+}
+}
+
+if(newY>this.minScrollY||newY<this.maxScrollY){
+if(this.alwaysBounceVertical){
+easing=utils.ease.quadratic;
+}else{
+newY=newY>this.minScrollY?this.minScrollY:this.maxScrollY;
+}
+}
+
+this._execEvent('onMomentumScrollBegin',gestureState);
+this._scrollTo(newX,newY,time,easing,function(){
+_this5._execEvent('onMomentumScrollEnd',gestureState);
+});
+return;
+}
+
+this._execEvent('onScrollAnimationEnd',gestureState);
+this._toggleIndicator(false);
+return true;
+}},{key:'_onPanResponderTerminationRequest',value:function _onPanResponderTerminationRequest(
+
+e){
+globalMoving=false;
+
+
+if(this.props.keyboardShouldPersistTaps){
+return false;
+}
+var point=e.nativeEvent,
+deltaX=point.pageX-this.pointX,
+deltaY=point.pageY-this.pointY,
+directionX=deltaX>0?-1:deltaX<0?1:0,
+directionY=deltaY>0?-1:deltaY<0?1:0,
+direction=Math.abs(deltaY)>Math.abs(deltaX)?'v':'h',
+allow=false;
+
+this.props.horizontal&&direction==='v'&&!this.alwaysBounceVertical&&(allow=true);
+!this.props.horizontal&&direction==='h'&&!this.alwaysBounceHorizontal&&(allow=true);
+
+if(this.props.horizontal&&direction==='h'&&!this.alwaysBounceHorizontal){
+directionX===1&&this.x<=this.maxScrollX&&(allow=true);
+directionX===-1&&this.x>=this.minScrollX&&(allow=true);
+}
+
+if(!this.props.horizontal&&direction==='v'&&!this.alwaysBounceVertical){
+directionY===1&&this.y<=this.maxScrollY&&(allow=true);
+directionY===-1&&this.y>=this.minScrollY&&(allow=true);
+}
+return allow;
+}},{key:'_onPanResponderTerminate',value:function _onPanResponderTerminate()
+
+{
+
+globalMoving=false;
+if(this._resetPosition(BOUNCETIME)){
+
+}
+}},{key:'setPageWithoutAnimation',value:function setPageWithoutAnimation()
+
+{var offset=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{x:0,y:0};
+
+this.scrollTo({
+x:offset.x,
+y:offset.y});
+
+}},{key:'_execEvent',value:function _execEvent(
+
+eventType){var gestureState=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{vx:0,vy:0};
+
+this.props[eventType]&&this.props[eventType].apply(this,[{
+nativeEvent:{
+contentOffset:{
+x:-(this.x/_cw_scale),
+y:-((this.y+(this.props.refreshControl?this.refreshControlHeight:0))/_cw_scale)},
+
+contentSize:{
+height:this.scrollerHeight/_cw_scale,
+width:this.scrollerWidth/_cw_scale},
+
+velocity:{
+x:gestureState.vx/_cw_scale,
+y:gestureState.vy/_cw_scale},
+
+layoutMeasurement:{
+height:this.wrapperHeight/_cw_scale,
+width:this.wrapperWidth/_cw_scale}}}]);
+
+
+
+}},{key:'_checkDismissMode',value:function _checkDismissMode()
+
+{
+
+if(this.props.keyboardDismissMode==='on-drag'){
+_index3.TextInputState.blur(_index3.TextInputState.currentFocus());
+}
+}},{key:'_checkShouldPersistTaps',value:function _checkShouldPersistTaps(
+
+e){
+
+if(!this.isMoving){
+if(!this.props.keyboardShouldPersistTaps){
+var ele=e.nativeEvent.target,
+focusEle=_index3.TextInputState.currentFocus();
+ele!==focusEle&&_index3.TextInputState.blur(focusEle);
+
+}
+}
+
+}},{key:'_checkIfInputInScrollView',value:function _checkIfInputInScrollView()
+
+{
+
+var focusEle=_index3.TextInputState.currentFocus();
+if(this.scroller){
+
+var inputs=this.scroller.getElementsByTagName("input");
+for(var i=0;i<inputs.length;i++){
+if(focusEle===inputs[i]){
+return true;
+}
+}
+}
+return false;
+
+
+
+
+
+
+
+
+}},{key:'_refresh',value:function _refresh()
+
+
+{var _this6=this;
+
+
+this.wrapperWidth=this.wrapper.clientWidth;
+this.wrapperHeight=this.wrapper.clientHeight;
+
+
+this.scrollerWidth=this.scroller.scrollWidth;
+this.scrollerHeight=this.scroller.scrollHeight;
+
+this.minScrollX=this.contentInset.left;
+this.minScrollY=this.contentInset.top;
+if(!this.props.horizontal){
+this.maxScrollX=0;
+}else{
+this.maxScrollX=this.wrapperWidth-this.scrollerWidth-this.contentInset.right;
+}
+this.maxScrollY=this.wrapperHeight-this.scrollerHeight-this.contentInset.bottom;
+
+
+this.maxScrollX=this.maxScrollX>0?0:this.maxScrollX;
+this.maxScrollY=this.maxScrollY>0?0:this.maxScrollY;
+
+this.endTime=0;
+this.directionX=0;
+this.directionY=0;
+
+
+if(this.stickyHeaderIndices.length>0){
+this.stickyHeaderIndices.forEach(function(item,index){
+_this6.stickyHeaderIndices[index].itemOffset=_this6.stickyHeaderIndices[index].itemDOM.offsetTop;
+_this6.stickyHeaderIndices[index].itemHeight=_this6.stickyHeaderIndices[index].itemDOM.offsetHeight;
+});
+}
+
+
+if(this.showsVerticalScrollIndicator){
+var indicatorHeight=0;
+if(this.maxScrollY<0){
+this.ableShowsVerticalScrollIndicator=true;
+var indicatorMaxLength=this.wrapperHeight-2*INDICATOR_GAP;
+indicatorHeight=Math.max(INDICATOR_MIN_SHOW_LENGTH,Math.floor(this.wrapperHeight*indicatorMaxLength/this.scrollerHeight));
+}else{
+this.ableShowsVerticalScrollIndicator=false;
+}
+if(this.state.indicatorVerticalHeight!==indicatorHeight){
+this.setState({indicatorVerticalHeight:indicatorHeight});
+}
+}
+
+if(this.showsHorizontalScrollIndicator){
+var indicatorWidth=0;
+if(this.maxScrollX<0){
+this.ableShowsHorizontalScrollIndicator=true;
+var indicatorMaxWidth=this.wrapperWidth-2*INDICATOR_GAP;
+indicatorWidth=Math.max(INDICATOR_MIN_SHOW_WIDTH,Math.floor(this.wrapperWidth*indicatorMaxWidth/this.scrollerWidth));
+}else{
+this.ableShowsHorizontalScrollIndicator=false;
+}
+if(this.state.indicatorHorizontalWidth!==indicatorWidth){
+this.setState({indicatorHorizontalWidth:indicatorWidth});
+}
+}
+
+
+if(this.props.needrefresh){
+this.updateCurPage();
+this.props.needrefresh({
+x:this.x,
+y:this.y},
+this.props.horizontal?"x":"y");
+}
+
+if(global.currentApp.isCheckKeyborad){
+var flag=this._checkIfInputInScrollView();
+if(flag&&this.scroller){
+this.scroller.scrollIntoView();
+global.currentApp.isCheckKeyborad=false;
+}
+}
+
+if(this.y<this.maxScrollY||this.x<this.maxScrollX){
+var newX=void 0,newY=void 0;
+this.x<this.maxScrollX&&(newX=this.maxScrollX);
+this.y<this.maxScrollY&&(newY=this.maxScrollY);
+this._scrollTo(newX,newY,0);
+}else{
+this._scrollTo(this.x,this.y,0);
+}
+if(!(typeof this.props.scrollEnabled=="boolean"&&this.props.scrollEnabled==false)){
+this._execEvent('onScroll');
+}
+}},{key:'_toggleIndicator',value:function _toggleIndicator(
+
+
+type){
+if(this.ableShowsVerticalScrollIndicator){
+this.indicatorVertical.style.opacity=type?INDICATOR_OPACITY:0;
+}
+if(this.ableShowsHorizontalScrollIndicator){
+this.indicatorHorizontal.style.opacity=type?INDICATOR_OPACITY:0;
+}
+}},{key:'_resetPosition',value:function _resetPosition()
+
+
+{var _this7=this;var time=arguments.length>0&&arguments[0]!==undefined?arguments[0]:0;
+var x=this.x,
+y=this.y;
+
+if(!this.props.horizontal||this.x>this.minScrollX){
+x=this.minScrollX;
+}else if(this.x<this.maxScrollX){
+x=this.maxScrollX;
+}
+
+if(this.props.horizontal||this.y>this.minScrollY){
+y=this.minScrollY;
+}else if(this.y<this.maxScrollY){
+y=this.maxScrollY;
+}
+
+if(this.state.isRefreshing&&y===this.minScrollY){
+y=y+this.refreshControlHeight;
+}
+
+if(x===this.x&&y===this.y){
+return false;
+}
+
+this._scrollTo(x,y,time,null,function(){
+_this7._execEvent('onMomentumScrollEnd');
+});
+return true;
+}},{key:'scrollTo',value:function scrollTo(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+options,callback){var _this8=this;
+options.x=options.x*_cw_scale||0;
+options.y=options.y*_cw_scale||0;
+
+this.props.refreshControl&&this.props.refreshControl.props.isRefreshing&&(options.y-=this.refreshControlHeight);
+this._toggleIndicator(true);
+this._scrollTo(-options.x,-options.y,options.animated!==false?options.duration?options.duration:BOUNCETIME:0,null,function(){
+if(options.animated!==false){
+_this8._execEvent("onMomentumScrollEnd");
+}
+_this8.updateCurPage();
+callback&&callback();
+});
+}},{key:'scrollToEnd',value:function scrollToEnd(
+
+
+
+
+
+
+
+
+
+options){
+var animated=options?options.animated===undefined?true:options.animated:true;
+var x=this.props.horizontal?this.maxScrollX/_cw_scale:0;
+var y=this.props.horizontal?0:this.maxScrollY/_cw_scale;
+this.scrollTo({x:-x,y:-y,animated:animated});
+}},{key:'updateCurPage',value:function updateCurPage()
+
+{
+if(this.props.pagingEnabled&&this.props.horizontal){
+this.curPage=Math.floor(Math.abs(this.x)/this.wrapperWidth);
+}
+
+if(this.props.pagingEnabled&&!this.props.horizontal){
+this.curPage=Math.floor(Math.abs(this.y)/this.wrapperHeight);
+}
+}},{key:'_scrollTo',value:function _scrollTo()
+
+
+{var x=arguments.length>0&&arguments[0]!==undefined?arguments[0]:0;var y=arguments.length>1&&arguments[1]!==undefined?arguments[1]:0;var time=arguments.length>2&&arguments[2]!==undefined?arguments[2]:0;var easing=arguments[3];var callback=arguments[4];
+
+
+
+
+if(x===this.x&&y===this.y){
+return;
+}
+easing=easing||utils.ease.circular;
+if(!time||time<=0){
+this.curAnimation=-1;
+this._transitionTime(time);
+this._transitionTimingFunction(easing);
+this._translate(x,y);
+callback&&callback();
+}else{
+this._animate(x,y,time,easing.fn,callback);
+}
+}},{key:'_getStickyState',value:function _getStickyState(
+
+y,offset){var lastHeight=arguments.length>2&&arguments[2]!==undefined?arguments[2]:0;
+var stickyState=void 0;
+switch(true){
+case offset+y-lastHeight>=this.minScrollY:
+stickyState=0;
+break;
+case offset+y>this.minScrollY&&offset+y-lastHeight<this.minScrollY:
+stickyState=1;
+break;
+case offset+y<=this.minScrollY:
+stickyState=2;
+break;}
+
+return stickyState;
+}},{key:'_transitionTime',value:function _transitionTime(
+
+time){
+time=time||0;
+var durationProp=utils.style.transitionDuration;
+if(!durationProp){
+return;
+}
+this.scroller.style[durationProp]=time+'ms';
+
+if(!time&&utils.isBadAndroid){
+this.scroller.style[durationProp]='0.0001ms';
+
+var self=this;
+self.rAF(function(){
+if(self.scroller.style[durationProp]==='0.0001ms'){
+self.scroller.style[durationProp]='0s';
+}
+});
+}
+
+
+}},{key:'_transitionTimingFunction',value:function _transitionTimingFunction(
+
+easing){
+this.scroller.style[utils.style.transitionTimingFunction]=easing;
+
+}},{key:'_translate',value:function _translate(
+
+
+x,y){var _this9=this;
+
+var _this=this;
+if(!this.uIdx){
+this.uIdx=_react2.default.lockUpdater();
+}
+clearTimeout(this._uIdxClock);
+this._uIdxClock=setTimeout(function(){
+if(_this.uIdx){
+_react2.default.unlockUpdater(_this.uIdx);
+_this.uIdx=null;
+}
+},this.stateUnlockDelay);
+
+isNaN(x)&&(x=0);
+isNaN(y)&&(y=0);
+
+this.x=x;
+this.y=y;
+
+this.contentOffset.x=-x;
+this.contentOffset.y=-y;
+
+
+if(this.stickyHeaderIndices.length>0){
+
+
+
+
+var indicesLength=this.stickyHeaderIndices.length;
+var stickyItem=_extends({},this.stickyItem);
+stickyItem.index=-1;
+for(var i=indicesLength-1;i>=0;i--){
+var item=this.stickyHeaderIndices[i];
+var nextItem=this.stickyHeaderIndices[i+1];
+var prevItem=this.stickyHeaderIndices[i-1];
+if(i<indicesLength-1){
+switch(true){
+case nextItem.itemStickState>=2:
+item.itemStickState=4;
+break;
+case nextItem.itemStickState===1:
+item.itemStickState=3;
+break;
+default:
+item.itemStickState=this._getStickyState(y,item.itemOffset,prevItem?prevItem.itemHeight:0);
+break;}
+
+}else{
+item.itemStickState=this._getStickyState(y,item.itemOffset,prevItem?prevItem.itemHeight:0);
+}
+
+
+if(item.itemStickState===2){
+stickyItem.index=item.itemIndex;
+stickyItem.state=2;
+}
+if(item.itemStickState===3){
+stickyItem.index=item.itemIndex;
+stickyItem.state=3;
+stickyItem.transformValue=' translate(0px,'+(-item.itemHeight+(this.minScrollY+nextItem.itemOffset+y))+'px) translateZ(0)';
+}
+}
+
+
+if(stickyItem.state===2&&this.stickyItem&&(this.stickyItem.index!==stickyItem.index||this.stickyItem.state===3)){
+_fastdom2.default.mutate(function(){
+if(_this9.stickyWrapperDOM){
+_this9.stickyWrapperDOM.style[commonTransform]='translate(0px,0px) translateZ(0)';
+}
+});
+}
+if(stickyItem.state===3){
+_fastdom2.default.mutate(function(){
+if(_this9.stickyWrapperDOM){
+_this9.stickyWrapperDOM.style[commonTransform]=stickyItem.transformValue;
+}
+});
+}
+
+if(this.stickyItem.index!==stickyItem.index&&(stickyItem.state===2||stickyItem.state===3)){
+this.setState({stickyItemIndex:stickyItem.index});
+this.stickyItem=_extends({},stickyItem);
+}
+}
+
+if(this.ableShowsVerticalScrollIndicator){
+var transformValue='translate(0px,'+-this.y/this.scrollerHeight*(this.wrapperHeight-2*INDICATOR_GAP)+'px) translateZ(0)';
+_fastdom2.default.mutate(function(){
+_this9.indicatorVertical.style[commonTransform]=transformValue;
+});
+}
+
+if(this.ableShowsHorizontalScrollIndicator){
+var _transformValue='translate('+-this.x/this.scrollerWidth*(this.wrapperWidth-2*INDICATOR_GAP)+'px, 0px) translateZ(0)';
+_fastdom2.default.mutate(function(){
+_this9.indicatorHorizontal.style[commonTransform]=_transformValue;
+
+});
+}
+
+
+if(this.props.refreshControl){
+this.refreshControlRef&&this.refreshControlRef.onScroll&&this.refreshControlRef.onScroll({
+y:y});
+
+}
+
+
+
+this.scroller.style[commonTransform]='translate('+x+'px,'+y+'px) translateZ(0)';
+
+
+
+
+
+
+
+
+
+
+
+
+
+}},{key:'_getAnimationIdx',value:function _getAnimationIdx()
+
+{
+this.animationIdx++;
+this.curAnimation=this.animationIdx;
+return this.curAnimation;
+}},{key:'_isCurrentAnimationIdx',value:function _isCurrentAnimationIdx(
+
+idx){
+var ret=this.curAnimation==idx;
+return ret;
+}},{key:'_animate',value:function _animate(
+
+
+destX,destY,duration,easingFn,callback){
+this.isAnimating=true;
+var idx=this._getAnimationIdx();
+var self=this,
+startX=this.x,
+startY=this.y;
+var startTime=utils.getTime();
+
+
+function step(){
+var now=utils.getTime();
+
+self.rAF&&cancelAnimationFrame(self.rAF);
+
+if(!self._isCurrentAnimationIdx(idx)){
+self._execEvent('onScrollAnimationEnd');
+callback&&callback();
+self.isAnimating=false;
+return;
+}
+
+if(now>=startTime+duration){
+self.curAnimation=-1;
+self._translate(destX,destY);
+if(!self._resetPosition(BOUNCETIME)){
+global.currentApp.isScrolling=false;
+self._toggleIndicator(false);
+self._execEvent('onScrollAnimationEnd');
+}
+
+callback&&callback();
+self.isAnimating=false;
+return;
+}
+
+var newX=void 0,newY=void 0,easing=void 0;
+now=(now-startTime)/duration;
+easing=easingFn(now);
+newX=Math.round((destX-startX)*easing+startX);
+newY=Math.round((destY-startY)*easing+startY);
+self._translate(newX,newY);
+self.rAF=requestAnimationFrame(step);
+self._execEvent('onScroll');
+}
+
+step();
+}},{key:'setContentOffsetBeforeLayout',value:function setContentOffsetBeforeLayout(
+
+
+
+
+
+
+
+
+offset){
+this.contentOffset.x=this.contentOffset.x-offset.x;
+this.contentOffset.y=this.contentOffset.y-offset.y;
+this.x=this.contentOffset.x;
+this.y=this.contentOffset.y;
+}},{key:'startRefreshing',value:function startRefreshing(
+
+
+
+
+
+
+
+
+fromResponder){
+
+if(this.props.refreshControl&&!this.state.isRefreshing){
+this.setState({
+isRefreshing:true,
+refreshResult:undefined});
+
+if(this.refreshControlRef&&this.refreshControlRef.onRefresh){
+this.refreshControlRef.onRefresh();
+}
+if(this.props.onRefresh){
+this.props.onRefresh();
+}
+this._scrollTo(0,this.refreshControlHeight,fromResponder?BOUNCETIME:0);
+}
+}},{key:'stopRefreshing',value:function stopRefreshing()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _this10=this;var config=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{};
+if(this.props.refreshControl&&this.state.isRefreshing){
+this.setState({
+isRefreshing:false,
+refreshResult:config.result});
+
+setTimeout(function(){
+var duration=config.duration||SCROLLTO_DURATION;
+_this10._resetPosition(config.animated===false?0:duration);
+});
+}
+}},{key:'startLoading',value:function startLoading()
+
+
+
+
+
+
+
+{
+if(this.props.loadControl&&!this.state.isLoading){
+this.setState({
+isLoading:true});
+
+this.loadControl.onLoad();
+if(this.props.onLoad){
+this.props.onLoad();
+}
+}
+this._scrollTo(0,this.maxScrollY,BOUNCETIME);
+}},{key:'stopLoading',value:function stopLoading()
+
+
+
+
+
+
+
+{
+if(this.props.loadControl&&this.state.isLoading){
+this.setState({
+isLoading:false});
+
+this._resetPosition(BOUNCETIME);
+}
+}},{key:'render',value:function render()
+
+{var _this11=this;
+var props=this.props;
+var scrollProps=_extends({},
+props,{
+onScroll:noop});
+
+
+
+var refreshControl=props.refreshControl||null;
+this.refreshControlHeight=null;
+if(refreshControl){
+this.refreshControlHeight=refreshControl.props.height;
+refreshControl=_react2.default.cloneElement(refreshControl,{
+ref:function ref(ins){_this11.refreshControlRef=ins;},
+isRefreshing:this.state.isRefreshing,
+refreshResult:this.state.refreshResult,
+style:[refreshControl.props.style,styles.refreshControl,{top:-this.refreshControlHeight}]});
+
+}
+
+var indexedControl=props.indexedControl||null;
+if(indexedControl){
+this.indexedControlHeight=indexedControl.props.height;
+indexedControl=_react2.default.cloneElement(indexedControl,{
+ref:function ref(ins){_this11.indexedControlRef=ins;}});
+
+
+
+
+}
+
+var loadControl=props.loadControl||null;
+this.loadControlHeight=null;
+if(loadControl){
+this.loadControlHeight=loadControl.props.height;
+var loadControlChild=_react2.default.cloneElement(loadControl,{
+ref:function ref(ins){_this11.loadControlRef=ins;},
+isLoading:this.state.isLoading});
+
+
+loadControl=
+_react2.default.createElement(_View2.default,{style:{maxHeight:this.loadControlHeight,height:this.loadControlHeight}},
+loadControlChild);
+
+
+
+}
+var indicatorHorizontal=this.showsHorizontalScrollIndicator?
+_react2.default.createElement(_View2.default,{
+style:[styles.indicator,styles.indicatorHorizontal,{width:this.state.indicatorHorizontalWidth}],
+ref:function ref(ins){_this11.indicatorHorizontalRef=ins;}}):
+null;
+var indicatorVertical=this.showsVerticalScrollIndicator?
+_react2.default.createElement(_View2.default,{
+style:[styles.indicator,styles.indicatorVertical,{height:this.state.indicatorVerticalHeight}],
+ref:function ref(ins){_this11.indicatorVerticalRef=ins;}}):
+null;
+
+var stickIndex=this.state.stickyItemIndex;
+if(this.props.isRenderHeader){
+stickIndex=stickIndex-1;
+}
+
+
+if(props.refreshControl){
+stickIndex=stickIndex-1;
+}
+var stickyWrapper=props.stickyHeaderIndices&&props.stickyHeaderIndices.length>0&&!props.horizontal?
+_react2.default.createElement(_View2.default,{style:styles.stickyWrapper,ref:function ref(ins){_this11.stickyWrapperRef=ins;}},
+stickIndex>-1?props.inheritsType=="ListView"?props.children[1][stickIndex]:props.children[stickIndex]:null):
+null;
+
+
+
+
+
+
+
+
+scrollProps.style&&scrollProps.style["justifyContent"]&&delete scrollProps.style["justifyContent"];
+scrollProps.style&&scrollProps.style["alignItems"]&&delete scrollProps.style["alignItems"];
+
+return(
+_react2.default.createElement(_Resizable2.default,_extends({
+ref:function ref(ins){_this11.wrapperRef=ins;}},
+scrollProps,
+this._panResponder.panHandlers,{
+style:[styles.scrollView,scrollProps.style],
+onResize:function onResize(e){
+_this11._refresh(e);
+}}),
+
+[stickyWrapper],
+_react2.default.createElement(_Resizable2.default,{
+className:scrollProps.horizontal?'rn-scroller-hori':'rn-scroller-vert',
+style:[
+scrollProps.contentContainerStyle,
+styles.scroller,scrollProps.horizontal&&styles.scrollerHorizontal,
+scrollProps.endFillColor&&{backgroundColor:scrollProps.endFillColor}],
+
+ref:function ref(ins){
+_this11.scrollerRef=ins;
+},
+onLayout:function onLayout(){
+scrollProps.onContentSizeChange&&scrollProps.onContentSizeChange(_this11.scrollerWidth/_cw_scale,_this11.scrollerHeight/_cw_scale);
+
+
+
+
+
+},
+onResize:function onResize(e){
+_this11._refresh(e);
+}},
+
+[refreshControl],
+props.children,
+loadControl),
+
+
+indicatorHorizontal,
+indicatorVertical,
+indexedControl));
+
+
+}}]);return ScrollView;}(_react.Component),_class.defaultProps={contentInset:{top:0,left:0,bottom:0,right:0},bounces:true,horizontal:false,showsVerticalScrollIndicator:false,showsHorizontalScrollIndicator:false,scrollEnabled:true,pagingEnabled:false,keyboardDismissMode:'none',keyboardShouldPersistTaps:false,decelerationRate:'normal'},_temp);
+
+
+ScrollView=(0,_index5.default)(ScrollView);
+ScrollView.displayName="ScrollView";exports.default=
+ScrollView;module.exports=exports['default'];

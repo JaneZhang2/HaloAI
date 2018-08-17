@@ -1,0 +1,211 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _fixStyleSheet=require('./fixStyleSheet');var _fixStyleSheet2=_interopRequireDefault(_fixStyleSheet);
+var _flattenStyle=require('./flattenStyle.web');var _flattenStyle2=_interopRequireDefault(_flattenStyle);
+var _index=require('./../PixelRatio/index.web');var _index2=_interopRequireDefault(_index);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+
+
+var absoluteFillObject={
+position:'absolute',
+left:0,
+right:0,
+top:0,
+bottom:0};
+
+var absoluteFill=(0,_fixStyleSheet2.default)(absoluteFillObject);
+
+var defaultStyleMap={borderStyle:"solid",borderColor:'black'};
+
+
+function merge(result,computedStyle){
+for(var key in computedStyle){
+
+if(!result[key]){
+result[key]=computedStyle[key];
+}else if(computedStyle[key]!=defaultStyleMap[key]){
+result[key]=computedStyle[key];
+}
+}
+}
+var fixAndFlatten=function(style,compType){
+if(!style){
+return{};
+}
+if(!Array.isArray(style)){
+if(style.hasFixed&&compType!="img"){
+delete style.hasFixed;
+}else{
+style=(0,_fixStyleSheet2.default)(style);
+}
+return style;
+}
+
+var result={};
+for(var i=0;i<style.length;++i){
+
+var computedStyle=fixAndFlatten(style[i],compType);
+if(computedStyle){
+merge(result,computedStyle);
+}
+}
+return result;
+};
+
+
+
+
+var StyleSheet={
+
+
+
+
+
+
+hairlineWidth:1/_index2.default.get(),
+
+
+
+
+
+
+
+flatten:_flattenStyle2.default,
+
+
+
+
+
+
+
+
+
+
+
+absoluteFill:absoluteFill,
+
+
+
+
+
+
+
+
+
+
+
+absoluteFillObject:absoluteFillObject,
+
+
+
+
+
+
+
+create:function create(obj){
+for(var className in obj){
+obj[className]=(0,_fixStyleSheet2.default)(obj[className]);
+obj[className].hasFixed=true;
+}
+return obj;
+},
+
+
+fix:function fix(style,component,compType){
+
+style=fixAndFlatten(style,compType);
+var props=void 0;
+if(component&&component.props){
+props=component.props;
+}else if(component){
+props=component;
+}
+
+if(style.useFlexbox&&props){
+if(props.className&&props.className.indexOf('rn-flex')===-1){
+props.className+=' rn-flex';
+}else if(!props.className){
+props.className='rn-flex';
+}
+
+delete style.useFlexbox;
+}
+
+
+
+
+
+
+
+return style;
+},
+
+
+
+inject:function inject(css){
+if(global.document){
+var style=global.document.createElement('style');
+style.innerHTML=css;
+global.document.head.appendChild(style);
+}
+
+}};exports.default=
+
+
+
+StyleSheet;module.exports=exports['default'];

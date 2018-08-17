@@ -1,0 +1,89 @@
+Object.defineProperty(exports,"__esModule",{value:true});exports.default=undefined;var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);var _View=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/View/View.web');var _View2=_interopRequireDefault(_View);var _TouchableOpacity=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Touchable/TouchableOpacity.web');var _TouchableOpacity2=_interopRequireDefault(_TouchableOpacity);var _Image=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Image/Image.web');var _Image2=_interopRequireDefault(_Image);var _NativeModules=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/modules/NativeModules/NativeModules.web');var _NativeModules2=_interopRequireDefault(_NativeModules);var _Text=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Text/Text.web');var _Text2=_interopRequireDefault(_Text);
+
+var _Button=require('./Button');function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
+var fontSize=global.fontSizeBase||100;
+var barStyle=parseFloat((44/fontSize).toFixed(3))+'rem';
+var bar2Style=parseFloat((88/fontSize).toFixed(3))+'rem';
+var borderWidth=parseFloat((8/fontSize).toFixed(3))+'rem';
+var remFn=function(val){return parseFloat(val/fontSize).toFixed(3)+'rem';};var
+
+
+NavigationBarButton=function(_Component){_inherits(NavigationBarButton,_Component);function NavigationBarButton(){_classCallCheck(this,NavigationBarButton);return _possibleConstructorReturn(this,(NavigationBarButton.__proto__||Object.getPrototypeOf(NavigationBarButton)).apply(this,arguments));}_createClass(NavigationBarButton,[{key:'render',value:function render()
+{var _this2=this,_top$right$bottom$lef,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+top,right,bottom,left;var tintColor="#fff";if(this.props.tintColor){tintColor=this.props.tintColor;}var borderStyle=borderWidth+" solid "+tintColor;if(this.props.type){if(this.props.type=="icon_back"){return _react2.default.createElement(_TouchableOpacity2.default,{onPress:function onPress(){if(_this2.props.onPress){_this2.props.onPress();}else if(currentApp.navigation){var routes=currentApp.navigation.getCurrentRoutes();if(!routes||!routes.length){global.history&&history.back();}else{currentApp.navigation.pop();}}}},_react2.default.createElement(_View2.default,{style:{position:'relative',transform:[{rotate:'45deg'},{scale:'0.3,0.3'}],height:barStyle,width:barStyle}},_react2.default.createElement('span',{style:{display:'inline-Block',verticalAlign:'middle',borderLeft:borderStyle,borderBottom:borderStyle,boxSizing:'border-box',width:barStyle,height:barStyle}})));}else{var index=this.props.type.lastIndexOf('_text');var iconName=this.props.type.substring(0,index>-1?index:this.props.type.length);var source=_NativeModules2.default.NativeResource.images[iconName];if(!(source&&source.width&&source.height&&source.code)){console.log('NativeModules.NativeResource.images.'+this.props.type+' does not exist in cw. use online pic instead please.');return null;}_top$right$bottom$lef={top:(44-source.height)/2.0,right:(44-source.width)/2.0,bottom:(44-source.height)/2.0,left:(44-source.width)/2.0},top=_top$right$bottom$lef.top,right=_top$right$bottom$lef.right,bottom=_top$right$bottom$lef.bottom,left=_top$right$bottom$lef.left;
+var iconStyle={fontFamily:'ct_font_common',fontSize:remFn(25),textAlign:'center',
+width:remFn(source.width||0),height:remFn(source.height||0),backgroundColor:'transparent',
+marginLeft:remFn(left),marginRight:remFn(right),marginTop:remFn(index>-1?0:top),marginBottom:remFn(index>-1?0:bottom)};
+if(this.props.tintColor){
+iconStyle.tintColor=this.props.tintColor;
+}
+if(index>-1){
+
+return(
+_react2.default.createElement(_TouchableOpacity2.default,_extends({},this.props,{onPress:this.props.onPress,style:_extends({},this.props.style,{width:44,height:44})}),
+_react2.default.createElement('div',{style:iconStyle},source.code.props.children),
+_react2.default.createElement(_Text2.default,{style:{fontSize:12,textAlign:'center'}},source.text)));
+
+
+}
+return(
+_react2.default.createElement(_TouchableOpacity2.default,_extends({},this.props,{onPress:this.props.onPress,style:_extends({},this.props.style,{width:44,height:44})}),
+_react2.default.createElement('div',{style:iconStyle},source.code.props.children)));
+
+
+
+
+
+
+
+
+
+
+}
+
+}else{
+return _react2.default.createElement(_Button.TextButton,_extends({},this.props,{style:_extends({},this.props.style,{justifyContent:'center',alignSelf:'center',width:this.props.children.length>2?bar2Style:barStyle,height:barStyle})}));
+}
+}}]);return NavigationBarButton;}(_react.Component);exports.default=NavigationBarButton;module.exports=exports['default'];

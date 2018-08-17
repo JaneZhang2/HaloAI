@@ -1,0 +1,244 @@
+var _typeof=typeof Symbol==="function"&&typeof(typeof Symbol==='function'?Symbol.iterator:'@@iterator')==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==(typeof Symbol==='function'?Symbol.prototype:'@@prototype')?"symbol":typeof obj;};!function(win){
+
+
+
+
+
+
+
+
+
+
+
+
+'use strict';
+
+
+
+
+
+
+var debug=function(){};
+
+
+
+
+
+
+var raf=win.requestAnimationFrame||
+win.webkitRequestAnimationFrame||
+win.mozRequestAnimationFrame||
+win.msRequestAnimationFrame||
+function(cb){return setTimeout(cb,16);};
+
+
+
+
+
+
+function FastDom(){
+var self=this;
+self.reads=[];
+self.writes=[];
+self.raf=raf.bind(win);
+debug('initialized',self);
+}
+
+FastDom.prototype={
+constructor:FastDom,
+
+
+
+
+
+
+
+
+
+measure:function measure(fn,ctx){
+debug('measure');
+var task=!ctx?fn:fn.bind(ctx);
+this.reads.push(task);
+scheduleFlush(this);
+return task;
+},
+
+
+
+
+
+
+
+
+
+
+mutate:function mutate(fn,ctx){
+debug('mutate');
+var task=!ctx?fn:fn.bind(ctx);
+this.writes.push(task);
+scheduleFlush(this);
+return task;
+},
+
+
+
+
+
+
+
+
+clear:function clear(task){
+debug('clear',task);
+return remove(this.reads,task)||remove(this.writes,task);
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extend:function extend(props){
+debug('extend',props);
+if((typeof props==='undefined'?'undefined':_typeof(props))!='object')throw new Error('expected object');
+
+var child=Object.create(this);
+mixin(child,props);
+child.fastdom=this;
+
+
+if(child.initialize)child.initialize();
+
+return child;
+},
+
+
+
+
+catch:null};
+
+
+
+
+
+
+
+
+function scheduleFlush(fastdom){
+if(!fastdom.scheduled){
+fastdom.scheduled=true;
+fastdom.raf(flush.bind(null,fastdom));
+debug('flush scheduled');
+}
+}
+
+
+
+
+
+
+
+
+
+
+function flush(fastdom){
+debug('flush');
+
+var writes=fastdom.writes;
+var reads=fastdom.reads;
+var error;
+
+try{
+debug('flushing reads',reads.length);
+runTasks(reads);
+debug('flushing writes',writes.length);
+runTasks(writes);
+}catch(e){error=e;}
+
+fastdom.scheduled=false;
+
+
+if(reads.length||writes.length)scheduleFlush(fastdom);
+
+if(error){
+debug('task errored',error.message);
+if(fastdom.catch)fastdom.catch(error);else
+throw error;
+}
+}
+
+
+
+
+
+
+
+
+
+function runTasks(tasks){
+debug('run tasks');
+var task;while(task=tasks.shift()){task();}
+}
+
+
+
+
+
+
+
+
+function remove(array,item){
+var index=array.indexOf(item);
+return!!~index&&!!array.splice(index,1);
+}
+
+
+
+
+
+
+
+
+function mixin(target,source){
+for(var key in source){
+if(source.hasOwnProperty(key))target[key]=source[key];
+}
+}
+
+
+
+var exports=win.fastdom=win.fastdom||new FastDom();
+
+
+if(typeof define=='function')define(function(){return exports;});else
+if((typeof module==='undefined'?'undefined':_typeof(module))=='object')module.exports=exports;
+
+}(typeof window!=='undefined'?window:this);

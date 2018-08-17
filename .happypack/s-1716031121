@@ -1,0 +1,36 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+
+var borderNames={
+borderColor:true,
+borderWidth:true,
+borderTopColor:true,
+borderRightColor:true,
+borderBottomColor:true,
+borderLeftColor:true,
+borderTopWidth:true,
+borderRightWidth:true,
+borderBottomWidth:true,
+borderLeftWidth:true};
+
+
+function fixBorderValue(style,result){
+if(!style.borderStyle&&!result.borderStyle){
+result.borderStyle='solid';
+}
+
+if(!style.borderColor&&!result.borderColor){
+result.borderColor='black';
+}
+}
+
+
+
+var fixBorder={
+names:borderNames,
+handle:fixBorderValue};exports.default=
+
+
+fixBorder;module.exports=exports['default'];

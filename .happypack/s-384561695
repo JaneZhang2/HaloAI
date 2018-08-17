@@ -1,0 +1,104 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+
+var _cssName=require('./cssName');var _cssName2=_interopRequireDefault(_cssName);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+
+
+var flexboxSpec='2012';
+if(global.document){
+var testStyle=global.document.createElement('div').style;
+
+flexboxSpec='2009';
+if('alignSelf'in testStyle){
+flexboxSpec='2012';
+}else if('webkitAlignSelf'in testStyle){
+flexboxSpec='2011';
+}
+
+
+if(/UCBrowser/i.test(global.navigator.userAgent)&&/Android/i.test(global.navigator.userAgent)){
+var exp=/[\w\W]*UCBrowser\/([\d]*)[\w\W]*/;
+var versionArr=exp.exec(global.navigator.userAgent);
+var version=versionArr&&versionArr[1];
+if(version){
+var intVersion=parseInt(version);
+if(!isNaN(intVersion)){
+if(intVersion>10){
+flexboxSpec='2012';
+}
+}else{
+flexboxSpec='2009';
+}
+}else{
+flexboxSpec='2009';
+}
+
+}
+}
+
+
+
+
+var oldNames={
+flex:'WebkitBoxFlex',
+order:'WebkitBoxOrdinalGroup',
+
+flexDirection:'WebkitBoxOrient',
+
+alignItems:'WebkitBoxAlign',
+
+justifyContent:'WebkitBoxPack',
+flexWrap:null,
+alignSelf:'WebkitBoxAlign'};
+
+
+var oldValues={
+'flex-end':'end',
+'flex-start':'start',
+'space-between':'justify',
+'space-around':'justify'};
+
+
+
+
+function fixFlexBox(name,value,result){
+
+
+if(!/flex/.test(result.display)){
+result.useFlexbox=true;
+}
+if(name==='flex'&&value===0){
+
+
+return result[name]='none';
+}
+if(flexboxSpec==='2009'){
+var oldValue=oldValues[value]||value;
+var oldName=oldNames[name]||name;
+if(oldName==='WebkitBoxOrient'){
+
+oldValue=value.indexOf('row')!==-1?'horizontal':'vertical';
+
+var dir=value.indexOf('reverse')!==-1?'reverse':'normal';
+
+result.WebkitBoxDirection=dir;
+}
+return result[oldName]=oldValue;
+}else if(flexboxSpec==='2011'){
+name=(0,_cssName2.default)(name)||name;
+return result[name]=value;
+}else{
+return result[name]=value;
+}
+}
+
+var fixFlexBoxObj={
+names:oldNames,
+handle:fixFlexBox};exports.default=
+
+
+fixFlexBoxObj;module.exports=exports['default'];

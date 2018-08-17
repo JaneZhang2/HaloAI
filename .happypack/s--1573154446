@@ -1,0 +1,35 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+var _fixUnit=require('./fixUnit');var _fixUnit2=_interopRequireDefault(_fixUnit);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+
+
+
+
+function fixBoxName(name,value,result){
+
+
+var margin='margin';
+var horizontal='Horizontal';
+var vertical='Vertical';
+var type=name.indexOf(margin)===0?margin:'padding';
+var directionType=name.indexOf(vertical)!==-1?vertical:horizontal;
+value=(0,_fixUnit2.default)(value,name);
+
+if(directionType===horizontal){
+result[type+'Left']=result[type+'Right']=value;
+}else if(directionType===vertical){
+result[type+'Top']=result[type+'Bottom']=value;
+}
+}
+var fixBoxNameObj={
+names:{
+paddingHorizontal:true,
+paddingVertical:true,
+marginHorizontal:true,
+marginVertical:true},
+
+handle:fixBoxName};exports.default=
+
+
+fixBoxNameObj;module.exports=exports['default'];

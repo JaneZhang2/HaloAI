@@ -1,0 +1,39 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+var fontSizeBase=global.fontSizeBase||100;
+var remFn=function(val){return parseFloat((val/fontSizeBase).toFixed(5))+'rem';};
+
+
+var textShadowNames={
+textShadowOffset:true,
+textShadowRadius:true,
+textShadowColor:true};
+
+function fixTextShadow(style,result){
+
+var textShadow=void 0;
+if(style.textShadowOffset){
+var x=remFn(style.textShadowOffset.width||0);
+var y=remFn(style.textShadowOffset.height||0);
+textShadow=x+' '+y;
+}else
+{
+textShadow='0rem 0rem';
+}
+var tsRadius=remFn(style.textShadowRadius||0);
+textShadow+=' '+tsRadius;
+var tsColor=style.textShadowColor;
+if(tsColor){
+textShadow+=' '+tsColor;
+}
+result.textShadow=textShadow;
+}
+
+var fixTextShadowObj={
+names:textShadowNames,
+handle:fixTextShadow};exports.default=
+
+
+fixTextShadowObj;module.exports=exports['default'];

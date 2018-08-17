@@ -1,0 +1,130 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _setValueForStyles=require('./../../modules/setValueForStyles');var _setValueForStyles2=_interopRequireDefault(_setValueForStyles);
+var _index=require('./../../apis/Dimensions/index.web');var _index2=_interopRequireDefault(_index);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+var _cw_scale=_index2.default.get('window').scale;
+var _measureLayout=function(node,relativeToNativeNode,callback){
+var relativeNode=relativeToNativeNode||node.parentNode;
+var relativeRect=relativeNode.getBoundingClientRect();
+
+var layout=node.getBoundingClientRect(),
+height=Math.round(layout.height/_cw_scale),
+left=Math.round(layout.left/_cw_scale),
+top=Math.round(layout.top/_cw_scale),
+width=Math.round(layout.width/_cw_scale);
+var x=left-relativeRect.left/_cw_scale;
+var y=top-relativeRect.top/_cw_scale;
+callback(x,y,width,height,left,top);
+};
+
+var UIManager={
+
+
+
+
+
+blur:function blur(node){
+try{
+node.blur();
+}catch(err){
+}
+},
+
+
+
+
+
+
+focus:function focus(node){
+try{
+node.focus();
+}catch(err){
+}
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+measure:function measure(node,callback){
+if(!node)return;
+_measureLayout(node,null,callback);
+},
+
+
+
+
+
+
+
+measureInWindow:function measureInWindow(node,callback){var _node$getBoundingClie=
+node.getBoundingClientRect(),height=_node$getBoundingClie.height,left=_node$getBoundingClie.left,top=_node$getBoundingClie.top,width=_node$getBoundingClie.width;
+callback(left,top,width,height);
+},
+
+
+
+
+
+
+
+
+
+
+measureLayout:function measureLayout(node,relativeToNativeNode,onFail,onSuccess){
+var relativeTo=relativeToNativeNode||node.parentNode;
+
+_measureLayout(node,relativeTo,onSuccess);
+},
+
+
+
+
+
+
+
+updateView:function updateView(node,props){
+for(var prop in props){
+var nativeProp=void 0;
+var value=props[prop];
+
+switch(prop){
+case'style':
+
+(0,_setValueForStyles2.default)(node,value);
+break;
+case'class':
+case'className':
+nativeProp='class';
+
+var className=node.getAttribute(nativeProp)+' '+value;
+node.setAttribute(nativeProp,className);
+break;
+case'text':
+case'value':
+
+node.value=value;
+break;
+default:
+node.setAttribute(prop,value);}
+
+}
+},
+RCTVideo:{
+Constants:{
+ScaleToFill:"ScaleToFill",
+ScaleAspectFit:"ScaleAspectFit",
+ScaleAspectFill:"ScaleAspectFill",
+ScaleNone:"ScaleNone"}}};exports.default=
+
+
+
+
+UIManager;module.exports=exports['default'];

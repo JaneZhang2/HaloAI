@@ -1,0 +1,7 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+var isUrl=function(target){
+return /^http(s)?:\/\/[A-Za-z0-9\-]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\:+!]*([^<>])*$/.test(target);
+};exports.default=
+
+isUrl;module.exports=exports["default"];

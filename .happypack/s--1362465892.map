@@ -1,0 +1,1 @@
+{"version":3,"sources":["node_modules/@ctrip/crnweb/src/crn/lib/Util/isFunction.js"],"names":["lisFunction"],"mappings":"yDAAA,6C;;AAEeA,oB","file":"isFunction.js","sourceRoot":"/Users/jane/Documents/HaloAI","sourcesContent":["import lisFunction from 'lodash/isFunction';\r\n\r\nexport default lisFunction;"]}

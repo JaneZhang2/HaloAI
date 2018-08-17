@@ -1,0 +1,40 @@
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});
+
+var _isUnitlessNumber=require('./react-lib/CSSProperty/isUnitlessNumber');var _isUnitlessNumber2=_interopRequireDefault(_isUnitlessNumber);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+
+
+
+
+
+
+
+
+function dangerousStyleValue(name,value){
+
+var isEmpty=value==null||typeof value==='boolean'||value==='';
+if(isEmpty){
+return'';
+}
+
+var isNonNumeric=isNaN(value);
+if(isNonNumeric||value===0||_isUnitlessNumber2.default.hasOwnProperty(name)&&_isUnitlessNumber2.default[name]){
+return''+value;
+}
+
+if(typeof value==='string'){
+value=value.trim();
+}
+if(global.fontSizeBase){
+value=parseFloat((val/global.fontSizeBase).toFixed(5))+'rem';
+}else{
+value=parseFloat((val/100).toFixed(5))+'rem';
+}
+
+return value;
+}exports.default=
+
+
+dangerousStyleValue;module.exports=exports['default'];

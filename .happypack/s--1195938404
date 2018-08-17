@@ -1,0 +1,186 @@
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default=undefined;var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);var _StyleSheet=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);var _Text=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Text/Text.web');var _Text2=_interopRequireDefault(_Text);var _View=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/View/View.web');var _View2=_interopRequireDefault(_View);var _Platform=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/Platform/Platform.web');var _Platform2=_interopRequireDefault(_Platform);var _index=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/Dimensions/index.web');var _index2=_interopRequireDefault(_index);
+
+var _NavigationBarButton=require('../NavigationBarButton');var _NavigationBarButton2=_interopRequireDefault(_NavigationBarButton);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+HeaderView=function(_Component){_inherits(HeaderView,_Component);
+function HeaderView(props){_classCallCheck(this,HeaderView);var _this=_possibleConstructorReturn(this,(HeaderView.__proto__||Object.getPrototypeOf(HeaderView)).call(this,
+props));
+_this.state={
+iosHotFixContent:null,
+headerHeight:44,
+title:_this.props.title||'',
+titleColor:_this.props.titleColor||'white',
+titleFontSize:_this.props.titleFontSize||17,
+subtitle:_this.props.subtitle||'',
+subtitleColor:_this.props.subtitleColor||'white',
+subtitleFontSize:_this.props.subtitleFontSize||15,
+backgroundColor:_this.props.backgroundColor||'rgb(25, 160, 240)',
+renderHeaderView:_this.props.renderHeaderView||_this._renderHeaderView.bind(_this),
+renderContentView:_this.props.renderContentView||_this._renderContentView.bind(_this),
+leftViewWidth:_this.props.leftViewWidth||44,
+renderLeftView:_this.props.renderLeftView||_this._renderLeftView.bind(_this),
+renderCenterView:_this.props.renderCenterView||_this._renderCenterView.bind(_this),
+rightViewWidth:_this.props.rightViewWidth||0,
+renderRightView:_this.props.renderRightView||function(){return null;}};
+
+if(global.navigator&&global.navigator.userAgent.match(/(iPhone\sOS)\s([\d_]+)/)&&_Platform2.default.isInApp){
+
+_this.state.headerHeight=global.navigator.userAgent.indexOf("iPhoneX")>0?88:64;
+_this.state.iosHotFixContent=_react2.default.createElement(_View2.default,{style:_extends({flexDirection:'row'},_this.props.style,{height:_this.state.headerHeight-44,width:'100%'})},' ');
+
+}
+if(global.document){
+_this._currentPageTitle=global.document.title;
+}return _this;
+
+}_createClass(HeaderView,[{key:'render',value:function render()
+
+{
+return this.state.renderHeaderView();
+}},{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
+
+nextProps){
+this.setState({
+title:nextProps.title?nextProps.title:this.state.title,
+titleColor:nextProps.titleColor?nextProps.titleColor:this.state.titleColor,
+tintColor:nextProps.tintColor?nextProps.tintColor:this.state.tintColor,
+titleFontSize:nextProps.titleFontSize?nextProps.titleFontSize:this.state.titleFontSize,
+subtitle:nextProps.subtitle?nextProps.subtitle:this.state.subtitle,
+subtitleColor:nextProps.subtitleColor?nextProps.subtitleColor:this.state.subtitleColor,
+subtitleFontSize:nextProps.subtitleFontSize?nextProps.subtitleFontSize:this.state.subtitleFontSize,
+backgroundColor:nextProps.backgroundColor?nextProps.backgroundColor:this.state.backgroundColor,
+leftViewWidth:nextProps.leftViewWidth?nextProps.leftViewWidth:this.state.leftViewWidth,
+rightViewWidth:nextProps.rightViewWidth?nextProps.rightViewWidth:this.state.rightViewWidth,
+relativeCenter:nextProps.relativeCenter?nextProps.relativeCenter:this.state.relativeCenter});
+
+}},{key:'_revertPageTitle',value:function _revertPageTitle(
+
+title){
+if(global.document){
+global.document.title=title||this._currentPageTitle;
+}
+
+}},{key:'componentWillUnmount',value:function componentWillUnmount()
+
+{
+this._revertPageTitle();
+}},{key:'setBackgroundColor',value:function setBackgroundColor(
+
+color){
+this.setState({
+backgroundColor:color});
+
+}},{key:'setTitle',value:function setTitle(
+
+title){
+this.setState({
+title:title});
+
+}},{key:'setTitleColor',value:function setTitleColor(
+
+color){
+this.setState({
+titleColor:color});
+
+}},{key:'setSubtitle',value:function setSubtitle(
+
+subtitle){
+this.setState({
+subtitle:subtitle});
+
+}},{key:'setSubtitleColor',value:function setSubtitleColor(
+
+color){
+this.setState({
+subtitleColor:color});
+
+}},{key:'setRenderLeftView',value:function setRenderLeftView(
+
+renderLeftView){var leftViewWidth=arguments.length>1&&arguments[1]!==undefined?arguments[1]:44;
+this.setState({
+leftViewWidth:leftViewWidth||0,
+renderLeftView:renderLeftView});
+
+}},{key:'setRenderCenterView',value:function setRenderCenterView(
+
+renderCenterView){
+this.setState({
+renderCenterView:renderCenterView});
+
+}},{key:'setRenderRightView',value:function setRenderRightView(
+
+renderRightView,rightViewWidth){
+this.setState({
+rightViewWidth:rightViewWidth||0,
+renderRightView:renderRightView});
+
+}},{key:'_renderHeaderView',value:function _renderHeaderView()
+
+{
+var headerStyle=[{height:this.state.headerHeight,width:'100%',position:'relative',zIndex:9999,backgroundColor:this.state.backgroundColor,overflow:'hidden'}];
+this.props.style&&headerStyle.push(this.props.style);
+return _react2.default.createElement(_View2.default,{style:headerStyle},this.state.renderContentView());
+}},{key:'_renderContentView',value:function _renderContentView()
+
+{
+return(
+_react2.default.createElement(_View2.default,null,
+this.state.iosHotFixContent||'',
+_react2.default.createElement(_View2.default,{style:_extends({flexDirection:'row'},this.props.style,{height:44,width:'100%'})},
+_react2.default.createElement(_View2.default,{style:{
+flexDirection:'row',
+justifyContent:'flex-start',
+width:Math.max(this.state.rightViewWidth,this.state.leftViewWidth)}},
+this.state.renderLeftView()),
+_react2.default.createElement(_View2.default,{style:styles.center},this.state.renderCenterView()),
+_react2.default.createElement(_View2.default,{style:{width:Math.max(this.state.rightViewWidth,this.state.leftViewWidth),justifyContent:'center'}},this.state.renderRightView?this.state.renderRightView():null))));
+
+
+}},{key:'_renderLeftView',value:function _renderLeftView()
+
+{
+var other=this.props.tintColor?{tintColor:this.props.tintColor}:{};
+return _react2.default.createElement(_NavigationBarButton2.default,_extends({},other,{type:'icon_back',onPress:function onPress(){
+if(currentApp.pageInstance&&typeof currentApp.pageInstance.pop=="function"){
+currentApp.pageInstance.pop();
+}else{
+currentApp.navigation.pop();
+}
+}}));
+}},{key:'_renderCenterView',value:function _renderCenterView()
+
+{
+return _react2.default.createElement(_View2.default,null,
+this._renderTitle(),
+this._renderSubtitle());
+
+}},{key:'_renderTitle',value:function _renderTitle()
+
+{
+if(this.state.title&&this.state.title.length>0){
+if(global.document){
+global.document.title=this.state.title;
+}
+return _react2.default.createElement(_Text2.default,{allowFontScaling:false,style:{color:this.state.titleColor,fontSize:this.state.titleFontSize,alignSelf:'center'},numberOfLines:this.state.subtitle&&this.state.subtitle.length>0?1:2},this.state.title);
+
+}else{
+return null;
+}
+}},{key:'_renderSubtitle',value:function _renderSubtitle()
+
+{
+return this.state.subtitle&&this.state.subtitle.length>0?_react2.default.createElement(_Text2.default,{allowFontScaling:false,style:{color:this.state.subtitleColor,fontSize:this.state.subtitleFontSize,alignSelf:'center'},numberOfLines:1},this.state.subtitle):null;
+}}]);return HeaderView;}(_react.Component);exports.default=HeaderView;
+
+
+var styles=_StyleSheet2.default.create({
+center:{
+flex:1,
+height:44,
+flexDirection:'column',
+justifyContent:'center'}});module.exports=exports['default'];

@@ -1,0 +1,76 @@
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};
+var _react=require('react');var _react2=_interopRequireDefault(_react);var _Text=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Text/Text.web');var _Text2=_interopRequireDefault(_Text);var _View=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/View/View.web');var _View2=_interopRequireDefault(_View);
+
+
+var _NavigationBarButton=require('./NavigationBarButton');var _NavigationBarButton2=_interopRequireDefault(_NavigationBarButton);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
+
+var fontSize=global.fontSizeBase||100;
+var remFn=function(val){return parseFloat((val/fontSize).toFixed(5))+'rem';};var
+
+NavigationBarConfig=
+function NavigationBarConfig(){_classCallCheck(this,NavigationBarConfig);
+var NAV_BUTTON_STYLE=remFn(44);
+this.mapper={
+LeftButton:function LeftButton(route){
+var leftButton=route.pageContext.leftButton;
+if(!leftButton){
+leftButton=
+_react2.default.createElement(_View2.default,{style:{
+display:'block',
+position:'absolute',
+width:NAV_BUTTON_STYLE,
+height:NAV_BUTTON_STYLE}},
+
+_react2.default.createElement(_NavigationBarButton2.default,{type:'icon_back'}));
+
+
+
+}
+
+return leftButton;
+},
+
+RightButton:function RightButton(route){
+if(route.pageContext&&route.pageContext.rightButtons&&route.pageContext.rightButtons.length>0){
+return _react2.default.createElement(_View2.default,{style:{
+flexDirection:'row',
+position:'absolute',
+right:0,
+justifyContent:'center',
+alignItems:'center'}},
+route.pageContext.rightButtons[0],route.pageContext.rightButtons[1]);
+}else{
+return null;
+}
+},
+
+Title:function Title(route){
+var sRight=NAV_BUTTON_STYLE;
+if(route.pageContext&&route.pageContext.rightButtons&&route.pageContext.rightButtons.length>0){
+sRight=route.pageContext.rightButtons.length*NAV_BUTTON_STYLE;
+}
+return(
+_react2.default.createElement(_View2.default,{style:_extends({},
+route.style,{
+position:'absolute',
+maxWidth:'100%',
+left:NAV_BUTTON_STYLE,
+right:sRight,
+height:NAV_BUTTON_STYLE,
+overflow:'hidden',
+justifyContent:'center',
+alignItems:'center'})},
+
+_react2.default.createElement(_Text2.default,{style:{textAlign:'center',color:'white',fontWeight:'',fontSize:17,width:'90%'},
+numberOfLines:2},
+route.title)));
+
+
+
+}};
+
+};exports.default=
+
+
+NavigationBarConfig;module.exports=exports['default'];

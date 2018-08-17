@@ -1,0 +1,100 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=require('react');var _react2=_interopRequireDefault(_react);
+var _reactDom=require('react-dom');var _reactDom2=_interopRequireDefault(_reactDom);
+var _View=require('./../../components/View/View.web');var _View2=_interopRequireDefault(_View);
+var _debounce=require('lodash/debounce');var _debounce2=_interopRequireDefault(_debounce);
+var _fastdom=require('fastdom');var _fastdom2=_interopRequireDefault(_fastdom);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+
+
+
+Resizable=function(_Component){_inherits(Resizable,_Component);
+
+function Resizable(props){_classCallCheck(this,Resizable);var _this=_possibleConstructorReturn(this,(Resizable.__proto__||Object.getPrototypeOf(Resizable)).call(this,
+props));
+_this.lastDimensions={
+width:0,
+height:0};
+
+_this.onScroll=_this.onScroll.bind(_this);
+_this.resetTriggers=(0,_debounce2.default)(_this.resetTriggers.bind(_this),100,{
+trailing:true});return _this;
+
+
+}_createClass(Resizable,[{key:'componentDidMount',value:function componentDidMount()
+
+{
+this.resizable=_reactDom2.default.findDOMNode(this.resizableRef);
+this.contract=_reactDom2.default.findDOMNode(this.contractRef);
+this.expandChild=_reactDom2.default.findDOMNode(this.expandChildRef);
+this.expand=_reactDom2.default.findDOMNode(this.expandRef);
+this.resetTriggers();
+}},{key:'resetTriggers',value:function resetTriggers()
+
+{var _this2=this;
+
+_fastdom2.default.measure(function(){
+var n1=_this2.contract.scrollWidth,
+n2=_this2.contract.scrollHeight,
+n3=_this2.expand.offsetWidth+1+'px',
+n4=_this2.expand.offsetHeight+1+'px',
+n5=_this2.expand.scrollWidth,
+n6=_this2.expand.scrollHeight;
+_fastdom2.default.mutate(function(){
+_this2.contract.scrollLeft=n1;
+_this2.contract.scrollTop=n2;
+_this2.expandChild.style.width=n3;
+_this2.expandChild.style.height=n4;
+_this2.expand.scrollLeft=n5;
+_this2.expand.scrollTop=n6;
+});
+});
+}},{key:'onScroll',value:function onScroll()
+
+
+{var _this3=this;
+
+this.resetTriggers();
+_fastdom2.default.measure(function(){
+var dimensions=_this3.getDimensions();
+_fastdom2.default.mutate(function(){
+if(_this3.haveDimensionsChanged(dimensions)){
+_this3.lastDimensions=dimensions;
+_this3.props.onResize&&_this3.props.onResize(dimensions);
+}
+});
+});
+}},{key:'getDimensions',value:function getDimensions()
+
+{
+return{
+width:this.resizable.offsetWidth,
+height:this.resizable.offsetHeight};
+
+}},{key:'haveDimensionsChanged',value:function haveDimensionsChanged(
+
+dimensions){
+return dimensions.width!=this.lastDimensions.width||dimensions.height!=this.lastDimensions.height;
+}},{key:'render',value:function render()
+
+
+{var _this4=this;
+
+return(
+_react2.default.createElement(_View2.default,_extends({},this.props,{ref:function ref(ins){_this4.resizableRef=ins;},onScroll:this.onScroll}),
+this.props.children,
+_react2.default.createElement('div',{className:'resize-triggers',ref:function ref(ins){_this4.triggersRef=ins;}},
+_react2.default.createElement('div',{className:'expand-trigger',ref:function ref(ins){_this4.expandRef=ins;}},
+_react2.default.createElement('div',{className:'expand-child',ref:function ref(ins){_this4.expandChildRef=ins;}})),
+
+
+_react2.default.createElement('div',{className:'contract-trigger',ref:function ref(ins){_this4.contractRef=ins;}}))));
+
+
+
+
+
+
+}}]);return Resizable;}(_react.Component);exports.default=
+
+
+Resizable;module.exports=exports['default'];

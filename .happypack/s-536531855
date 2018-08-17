@@ -1,0 +1,58 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _Platform=require("/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/Platform/Platform.web");var _Platform2=_interopRequireDefault(_Platform);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var
+
+
+
+Navigation=function(){
+function Navigation(app){_classCallCheck(this,Navigation);
+this.app=app;
+}_createClass(Navigation,[{key:"initialPage",value:function initialPage()
+
+{
+return this.app.pages.filter(function(page){return page.isInitialPage;})[0];
+}},{key:"getCurrentRoutes",value:function getCurrentRoutes()
+
+{var _navigator;
+return(_navigator=this.navigator).getCurrentRoutes.apply(_navigator,arguments);
+}},{key:"getCurrentRoute",value:function getCurrentRoute()
+
+{
+var routes=this.getCurrentRoutes();
+return routes[routes.length-1];
+}},{key:"push",value:function push(
+
+pageName){var params=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};var queryStringObj=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};
+if(global.cw_routeMapConfig){
+if(global.cw_routeMapConfig[pageName]){
+pageName=global.cw_routeMapConfig[pageName];
+}
+}
+var route=this.app.pages.filter(function(page){return pageName==page.name;})[0]||{};
+route.params=params;
+route.queryStringObj=queryStringObj;
+return this.navigator.push(route);
+}},{key:"pop",value:function pop()
+
+{var _navigator2;
+return(_navigator2=this.navigator).pop.apply(_navigator2,arguments);
+}},{key:"replace",value:function replace(
+
+pageName,params){
+this.navigator.replace(pageName,params);
+}},{key:"replaceAtIndex",value:function replaceAtIndex(
+pageName,index,cb,params){
+this.navigator.replaceAtIndex(pageName,index,cb,params);
+}},{key:"replacePrevious",value:function replacePrevious(
+
+pageName,params){
+this.navigator.replacePrevious(pageName,params);
+}},{key:"popToTop",value:function popToTop()
+{
+this.navigator.popToTop();
+}},{key:"popToRoute",value:function popToRoute(
+
+route){
+this.navigator.popToRoute(route);
+}}]);return Navigation;}();exports.default=
+
+
+Navigation;module.exports=exports["default"];

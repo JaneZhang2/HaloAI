@@ -1,0 +1,37 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+
+
+
+
+
+var _size=require('lodash/size');var _size2=_interopRequireDefault(_size);
+var _each=require('lodash/each');var _each2=_interopRequireDefault(_each);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+var getUrlParams=function(url){
+var _url=url.split('://'),
+
+
+
+
+
+
+
+
+
+
+
+idx;var searchReg=/([^&=?]+)=([^&]+)/g;var urlParams={};var match,value,length,name;while(match=searchReg.exec(_url[0])){name=match[1];value=match[2];urlParams[name]=value;}if(_url[1]){idx=0;
+length=(0,_size2.default)(urlParams);
+(0,_each2.default)(urlParams,function(value,key){
+if(++idx==length){
+urlParams[key]+='://'+_url[1];
+}
+});
+}
+return urlParams;
+};exports.default=
+
+getUrlParams;module.exports=exports['default'];

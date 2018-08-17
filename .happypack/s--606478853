@@ -1,0 +1,882 @@
+
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp,_class3,_temp3;
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);
+
+var _reactDom=require('react-dom');var _reactDom2=_interopRequireDefault(_reactDom);
+
+var _View=require('./../View/View.web');var _View2=_interopRequireDefault(_View);
+var _PlatformWeb=require('./../../apis/Platform/Platform.web.js');var _PlatformWeb2=_interopRequireDefault(_PlatformWeb);
+var _DeviceEventEmitter=require('./../../apis/EventEmitter/DeviceEventEmitter.web');var _DeviceEventEmitter2=_interopRequireDefault(_DeviceEventEmitter);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _toConsumableArray(arr){var i,arr2;if(Array.isArray(arr)){for(i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
+
+var isSupportLocalStrage=!global.cw_api_isPrivateMode;
+var pushUbt=function(obj){
+if(!global.__bfi){
+global.__bfi=[];
+}
+global.__bfi.push(obj);
+};
+var pageCallbackEventName='pagecallback';var
+
+Navigator=(_temp=_class=function(_Component){_inherits(Navigator,_Component);
+
+function Navigator(props){_classCallCheck(this,Navigator);var _this=_possibleConstructorReturn(this,(Navigator.__proto__||Object.getPrototypeOf(Navigator)).call(this,
+props));
+
+var routeStack=_this.props._webRouteStack;
+console.log('routeStack',routeStack);
+
+_this.routeHistoryStack=[];
+_this.routeHistoryArr=[];
+
+_this.pagePastInstance=null;
+if(!routeStack){
+throw new Error('invalid routeStack or initialRoute');
+}
+_this.popOptionObj={};
+
+_this._routerMaps=routeStack.routes;
+_this.pageInstance=null;
+_this.parentNode=document.getElementById("rootTag");
+_this.inNode=null;
+_this.outNode=null;
+_this.state={
+presentedIndex:0};
+
+_this.popRouteName="";
+
+_DeviceEventEmitter2.default.subscribe("popToPage",function(pageName,info){
+this.pop(pageName,info);
+},_this);
+_this._pop=_this._pop.bind(_this);
+if(global.document){
+
+global.removeEventListener('popstate',_this._pop);
+global.addEventListener('popstate',_this._pop);
+
+global.document.addEventListener("touchmove",function(e){
+global.currentApp.globalTouchMove={
+moveFlag:true,
+moveTarget:e.target};
+
+
+});
+}
+
+_this.loadView(null,null,true);return _this;
+
+}_createClass(Navigator,[{key:'matchRouter',value:function matchRouter()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+var route=location.pathname;
+if(route.indexOf("/")!=0){
+route="/"+route;
+}
+return this._routerMaps[route];
+
+}},{key:'mergeUrl',value:function mergeUrl(
+route){
+if(route.aliasName){
+return route.aliasName;
+}else{
+return route.pathname;
+}
+}},{key:'changeHistory',value:function changeHistory(
+method,url,html,isLandingPage,queryStringObj){
+if(!isLandingPage){
+if(method=="push"){
+var queryString=this._transformToQueryString(queryStringObj);
+if(queryString){
+url=url+"?"+queryString;
+}
+history.pushState({url:url,text:html,options:{pushState:true}},document.title,url);
+}else if(method=="pop"){
+history.replaceState({url:url,text:html,options:{pushState:false}},document.title,url);
+
+}
+}
+
+}},{key:'_hasClass',value:function _hasClass(
+elem,cls){
+cls=cls||'';
+if(cls.replace(/\s/g,'').length==0)return false;
+return new RegExp(' '+cls+' ').test(' '+elem.className+' ');
+}},{key:'_addClass',value:function _addClass(
+
+elem,cls){
+if(!this._hasClass(elem,cls)){
+elem.className=elem.className==''?cls:elem.className+' '+cls;
+}
+}},{key:'_removeClass',value:function _removeClass(
+
+elem,cls){
+if(this._hasClass(elem,cls)){
+var newClass=' '+elem.className.replace(/[\t\r\n]/g,'')+' ';
+while(newClass.indexOf(' '+cls+' ')>=0){
+newClass=newClass.replace(' '+cls+' ',' ');
+}
+elem.className=newClass.replace(/^\s+|\s+$/g,'');
+}
+}},{key:'_showView',value:function _showView(
+inNode,testStyle){
+if(!inNode){
+throw new Error('navigator.inNode is not exist!');
+}
+if(testStyle.hasOwnProperty("flex")){
+inNode.style.display="flex";
+}else if(testStyle.hasOwnProperty("webkitFlex")){
+inNode.style.display="-webkit-flex";
+}else if(testStyle.hasOwnProperty("webkitBoxFlex")){
+inNode.style.display="-webkit-box";
+}
+}},{key:'_record',value:function _record()
+{
+var pageid=0;
+if(currentApp&&currentApp.pageInstance&&currentApp.pageInstance.getPageId){
+pageid=currentApp.pageInstance.getPageId();
+}
+try{
+var startTime=this.navigationStart||0,endTime=new Date().getTime();
+
+var options={prjName:WEBPACK_PROJECT_NAME,crnwebVer:WEBPACK_CRNWEB_VERSION,cwVer:WEBPACK_CW_VERSION,startTime:startTime,endTime:endTime};
+options.pageid=pageid;
+
+pushUbt(['_trackMetric',{
+name:"101534",
+value:endTime-startTime,
+tag:options}]);
+
+
+}catch(e){
+console.log('[pageJump]-error',e);
+}
+}},{key:'switchView',value:function switchView(
+inNode,outNode,className,callback){var _this2=this;
+var afterAnimateRun=false;
+var testStyle=document.createElement('div').style;
+var animationNameArr=["animationend","webkitAnimationEnd"];
+
+if(className){
+
+var animateHandler=function(){
+if(afterAnimateRun){
+return;
+}
+afterAnimateRun=true;
+for(var i=0;i<animationNameArr.length;i++){
+inNode.removeEventListener(animationNameArr[i],function(){});
+}
+_this2._removeClass(inNode,'animatestart');
+_this2._removeClass(className);
+
+if(outNode){
+outNode.style.display="none";
+}
+callback&&callback();
+};
+
+for(var i=0;i<animationNameArr.length;i++){
+inNode.addEventListener(animationNameArr[i],animateHandler);
+}
+this._showView(inNode,testStyle);
+this._record();
+this._addClass(inNode,'animatestart');
+this._addClass(inNode,className);
+setTimeout(animateHandler,1000);
+}else{
+if(outNode){
+outNode.style.display="none";
+}
+this._showView(inNode,testStyle);
+this._record();
+callback&&callback();
+}
+}},{key:'renderCallBack',value:function renderCallBack(
+
+router,method,isLandingPage){var _class2,_temp2;
+var self=this;
+var comInstance=self.props.renderScene.call(self,router,self);
+
+var urlTitle=self.props.renderUrlTitle&&self.props.renderUrlTitle();
+var header=_react2.default.cloneElement(self.props.navigationBar,{passProps:router,urlTitle:urlTitle});
+var temptitle=router.title;
+
+var pageid=Navigator.getID();
+currentApp.curPageid=pageid;var
+
+
+Scene=(_temp2=_class2=function(_Component2){_inherits(Scene,_Component2);
+function Scene(props){_classCallCheck(this,Scene);var _this3=_possibleConstructorReturn(this,(Scene.__proto__||Object.getPrototypeOf(Scene)).call(this,
+props));
+if(router.title){
+if(global.document){
+global.document.title=router.title;
+}
+}
+_this3.sceneRef=null;
+_this3.buPageIns=null;
+_this3.state={
+header:header};return _this3;
+
+}_createClass(Scene,[{key:'getChildContext',value:function getChildContext()
+
+{
+return{store:self.context&&self.context.store};
+}},{key:'render',value:function render()
+{var _this4=this;
+var callback=null;
+if(router.params&&router.params.callback){
+
+_DeviceEventEmitter2.default._registryFunction(pageCallbackEventName,router.params.callback,currentApp.pageInstance);
+callback=function(){var _len,args,_key;for(_len=arguments.length,args=Array(_len),_key=0;_key<_len;_key++){args[_key]=arguments[_key];}
+_DeviceEventEmitter2.default._registryData.apply(_DeviceEventEmitter2.default,[pageCallbackEventName].concat(args));
+};
+}
+var comPage=_react2.default.cloneElement(comInstance,_extends({},router.params,{
+passProps:router.params||self.props.params,
+callback:callback,ref:function ref(_ref){_this4.buPageIns=_ref;}}));
+if(router.queryStringObj&&Object.keys(router.queryStringObj).length>0){
+comPage.props.app.urlQuery=router.queryStringObj;
+}
+return(
+_react2.default.createElement(_View2.default,{name:'Scene',style:{flex:1,display:'flex',width:'100%',height:'100%'},ref:function ref(_ref2){_this4.sceneRef=_ref2;}},
+this.state.header,
+comPage));
+
+
+}},{key:'componentWillUnmount',value:function componentWillUnmount()
+{
+
+}},{key:'componentDidMount',value:function componentDidMount()
+{
+
+if(temptitle!=router.title){
+if(global.document){
+global.document.title=router.title||urlTitle||'';
+}
+
+var _header=_react2.default.cloneElement(self.props.navigationBar,{
+passProps:router,
+urlTitle:urlTitle});
+
+this.setState({
+header:_header});
+
+}
+
+
+_reactDom2.default.findDOMNode(this.sceneRef).addEventListener('touchmove',function(e){
+e.preventDefault&&e.preventDefault();
+},false);
+}}]);return Scene;}(_react.Component),_class2.childContextTypes={store:null},_temp2);
+
+
+
+
+var renderNode=document.createElement("div");
+var url=this.mergeUrl(router);
+renderNode.setAttribute("id",pageid);
+renderNode.style.display='none';
+renderNode.style.height='100%';
+renderNode.style.width='100%';
+renderNode.style.flex='1 1 0%';
+renderNode.setAttribute("page-url",url);
+this.parentNode.appendChild(renderNode);
+
+
+this.outNode=this.inNode;
+this.inNode=document.getElementById(pageid);
+this.pagePastInstance=this.pageInstance;
+
+
+
+
+
+
+if(this.pagePastInstance&&currentApp.pageInstance&&currentApp.pageInstance.pageDidDisappear){
+currentApp.pageInstance.pageDidDisappear();
+}
+
+
+this.pageInstance=_reactDom2.default.render(_react2.default.createElement(Scene),this.inNode);
+
+this.changeHistory(method,url,"",isLandingPage,router.queryStringObj);
+if(method=='pop'){
+this.routeHistoryStack.length>0&&this.routeHistoryStack.pop();
+}
+currentApp.pageInstance=this.pageInstance&&this.pageInstance.buPageIns||{};
+
+currentApp.pageInstance._onDidShow&&currentApp.pageInstance._onDidShow(router);
+
+if(!this.isRefreshLoad)
+{
+this.routeHistoryStack.push({pageName:router.name,pageid:pageid,pageInstance:this.pageInstance,url:location.href,node:this.inNode,sceneConfig:router.sceneConfig});
+
+}
+this.routeHistoryArr.push({pageName:router.name,pageid:pageid,pageInstance:this.pageInstance,url:location.href,node:this.inNode,sceneConfig:router.sceneConfig});
+if(router.params){
+if(isSupportLocalStrage){
+try{
+global.localStorage.setItem(router.name+"_cache",JSON.stringify(_extends({},router.params,{searchString:location.search})));
+}catch(ex){
+console.log('router 参数写入localStorage失败',ex);
+}
+}
+}
+
+var animateClass="";
+if(router.sceneConfig&&router.sceneConfig.gestures){
+animateClass=router.sceneConfig.gestures.animate;
+}
+
+this.switchView(this.inNode,this.outNode,animateClass);
+}},{key:'loadView',value:function loadView(
+router,method,isLandingPage){
+this.navigationStart=new Date().getTime();
+if(!router){
+router={};
+}
+currentApp.isPopPage=false;
+
+
+if(Object.keys(router).length==0){
+router=this.matchRouter();
+if(!router){
+console.error("No Route Found");
+return;
+}
+}
+
+
+if(!method){
+if(isSupportLocalStrage){
+try{
+var routeParamsString=global.localStorage.getItem(router.name+"_cache");
+var routeObj=JSON.parse(routeParamsString);
+if(routeObj&&routeObj.searchString!=""){
+if(routeObj.searchString==location.search){
+router.params=_extends(router.params||{},routeObj);
+}
+}
+}catch(e){
+console.log('router 参数读取localStorage失败',e);
+}
+}
+
+method="push";
+}
+
+
+
+
+
+var self=this;
+if(router.component&&router.component.toString().indexOf("__CRNWEBFUNCTION__")>=0){
+router.component(function(comp){
+router.component=comp;
+self.renderCallBack(router,method,isLandingPage);
+});
+}else{
+if(!router.component){
+console.log("router.component 不存在，页面将会报错！！！，请检查router配置...",router);
+}
+if(router.component.__lazyRequireFlag&&router.component.load){
+router.component=router.component.load();
+self.renderCallBack(router,method,isLandingPage);
+}else{
+this.renderCallBack(router,method,isLandingPage);
+}
+}
+
+
+}},{key:'render',value:function render()
+
+{
+
+return(
+_react2.default.createElement(_View2.default,null));
+
+
+}},{key:'_generateRealURL',value:function _generateRealURL(
+
+
+urlPattern,passProps){
+
+if(passProps){
+for(var prop in passProps){
+urlPattern=urlPattern.replace(new RegExp(':'+prop,'ig'),passProps[prop]);
+}
+}
+return urlPattern;
+}},{key:'push',value:function push(
+
+
+
+
+
+router){
+
+console.log(router);
+
+this.loadView(router,"push");
+
+}},{key:'replace',value:function replace(
+
+
+
+
+
+pageName,params){
+
+
+var router=this._getRouterFromName(pageName);
+if(params){
+router.params=_extends({},params);
+}
+this.loadView(router,'pop');
+
+}},{key:'replaceAtIndex',value:function replaceAtIndex(
+
+pageName,index,cb,params){
+
+var routerStack=this.getCurrentRoutes(),routerCount=routerStack.length;
+
+if(index<routerCount){
+routerStack=this.routeHistoryStack.slice(0,index);
+this.routeHistoryStack=routerStack;
+this.replace(pageName,params);
+cb&&cb();
+}
+}},{key:'replacePrevious',value:function replacePrevious(
+
+pageName,params){
+
+var routerStack=this.getCurrentRoutes(),routerCount=routerStack.length;
+this.replaceAtIndex(pageName,routerCount-2,null,params);
+}},{key:'_getRouteName',value:function _getRouteName(
+
+pageName){
+if(!pageName){return'';}
+if(global.cw_routeMapConfig){
+if(global.cw_routeMapConfig[pageName]){
+pageName=global.cw_routeMapConfig[pageName];
+}
+}
+return pageName;
+}},{key:'_getRouterFromName',value:function _getRouterFromName(
+pageName){
+var route=this._getRouteName(pageName);
+if(route){
+if(route.trim().indexOf("/")!=0){
+route="/"+route;
+}
+var router=this._routerMaps[route]||{};
+return router;
+}else{
+throw new Error('invalid pageName,pageName does not in routeStack');
+}
+
+}},{key:'getCurrentRoutes',value:function getCurrentRoutes()
+
+{
+if(this.routeHistoryStack){
+return this.routeHistoryStack;
+}
+}},{key:'jumpBack',value:function jumpBack()
+
+{
+
+}},{key:'jumpTo',value:function jumpTo()
+
+{
+
+}},{key:'resetTo',value:function resetTo()
+
+{
+
+}},{key:'immediatelyResetRouteStack',value:function immediatelyResetRouteStack()
+
+{
+
+}},{key:'popToRoute',value:function popToRoute()
+
+{
+
+
+
+
+
+
+
+
+
+
+}},{key:'popToTop',value:function popToTop()
+
+{
+
+history.back();
+}},{key:'pop',value:function pop(
+
+pageName,options){
+
+
+
+
+
+
+
+
+
+
+
+if(options){
+this.popOptionObj=options;
+}else{
+this.popOptionObj={};
+}
+
+if(_PlatformWeb2.default.isInApp&&this.routeHistoryStack.length==1){
+global.CtripUtil&&CtripUtil.app_back_to_last_page();
+}else{
+if(pageName){
+if(global.cw_routeMapConfig){
+if(global.cw_routeMapConfig[pageName]){
+pageName=global.cw_routeMapConfig[pageName];
+}
+}
+this.popRouteName=pageName;
+}else{
+this.popRouteName="";
+}
+
+if(this.popRouteName){
+this._pop();
+}else{
+history.back();
+}
+}
+}},{key:'_pop',value:function _pop()
+
+{
+
+var self=this,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pageName;if(self.routeHistoryStack.length<2){if(self.popRouteName){if(self.popRouteName.trim().indexOf("/")!=0){self.popRouteName="/"+self.popRouteName;}if(self._routerMaps[self.popRouteName]){self._removeNodeAndUnmount(currentApp.curPageid);self.isRefreshLoad=true;self.loadView(self._routerMaps[self.popRouteName],"pop");self.isRefreshLoad=false;}self.popRouteName='';return true;}else{router=self._routerMaps[location.pathname];if(router){self._removeNodeAndUnmount(currentApp.curPageid);self.isRefreshLoad=true;self.loadView(router,"pop");self.isRefreshLoad=false;}return true;}}else{if(!global.document){return;}var popItem=null;if(self.popRouteName){var isExists=false;for(var rIndex=self.routeHistoryStack.length-2;rIndex>=0;rIndex--){popItem=self.routeHistoryStack.pop();pageName=self.routeHistoryStack[rIndex].pageName;
+if(pageName==self.popRouteName||'/'+pageName==self.popRouteName){
+isExists=true;
+break;
+}else if(popItem){
+self._removeNodeAndUnmount(popItem.pageid);
+}
+}
+if(!isExists){
+console.log("The router is not found in history!");
+
+popItem=self.routeHistoryArr.pop();
+self.routeHistoryStack=[].concat(_toConsumableArray(self.routeHistoryArr));
+
+}
+}else{
+popItem=self.routeHistoryStack.pop();
+
+}
+if(popItem&&currentApp&&currentApp.pageInstance&&currentApp.pageInstance.componentWillUnmount){
+currentApp.pageInstance.componentWillUnmount();
+}
+var lastRouteView=self.routeHistoryStack[self.routeHistoryStack.length-1];
+self.outNode=self.inNode;
+self.inNode=global.document.getElementById(lastRouteView.pageid);
+if(self.popOptionObj.queryStringObj&&Object.keys(self.popOptionObj.queryStringObj).length>0){
+lastRouteView.url=self._setQueryString(self.popOptionObj.queryStringObj,lastRouteView.url);
+}
+
+var pageTitle=self._routerMaps[lastRouteView.pageName].title;
+global.history.replaceState({
+url:lastRouteView.url,
+text:"",
+options:""},
+pageTitle,lastRouteView.url);
+global.document.title=pageTitle||document.title;
+var animateClass=null;
+if(lastRouteView.sceneConfig&&lastRouteView.sceneConfig.gestures){
+animateClass=lastRouteView.sceneConfig.gestures.animate;
+}
+
+_react2.default.__updateList=[];
+
+
+
+
+
+
+
+
+
+
+currentApp.isPopPage=true;
+self.switchView(self.inNode,self.outNode,animateClass,function(){
+
+
+
+
+
+
+
+
+
+
+
+self._removeNodeAndUnmount(self.outNode);
+var willLostPageInstance=currentApp.pageInstance;
+
+if(lastRouteView.pageInstance&&lastRouteView.pageInstance.buPageIns){
+currentApp.pageInstance=lastRouteView.pageInstance.buPageIns;
+}else{
+currentApp.pageInstance={};
+console.log("currentApp.pageInstance is null,please checkout your logic");
+}
+if(currentApp.pageInstance.pageDidAppear){
+currentApp.pageInstance.pageDidAppear(null,true);
+}
+
+if(willLostPageInstance.props&&"function"===typeof willLostPageInstance.props.callback){
+_DeviceEventEmitter2.default._trigger(pageCallbackEventName);
+}
+willLostPageInstance=null;
+self.popRouteName='';
+});
+
+}
+}},{key:'_removeNodeAndUnmount',value:function _removeNodeAndUnmount(
+
+node){
+if('string'===typeof node){
+node=document.getElementById(node);
+}
+if(node){
+_reactDom2.default.unmountComponentAtNode(node);
+if(node.remove){
+node.remove();
+}else if(node.parentNode!==null){
+
+
+node.parentNode.removeChild(node);
+}
+}
+}},{key:'_decode',value:function _decode(
+
+codeString){return decodeURIComponent(codeString.replace(/\+/g," "));}},{key:'_transformToQueryString',value:function _transformToQueryString(
+
+json){
+if(Object.keys(json).length>0){
+return""+Object.keys(json).map(function(key){
+return encodeURIComponent(key)+'='+
+encodeURIComponent(json[key]);
+}).join('&');
+}else{
+return'';
+}
+}},{key:'_setQueryString',value:function _setQueryString(
+
+queryStringObj,url){
+var urlParams={},match=void 0,search=/([^&=]+)=?([^&]*)/g;
+var matchStringArr=url.match(/(\?.*)/);
+var searchString="";
+if(matchStringArr&&matchStringArr.length>1){
+searchString=matchStringArr[1].substring(1);
+if(searchString){
+while(match=search.exec(searchString)){
+urlParams[this._decode(match[1])]=match[2];
+}
+}
+}
+
+var keyArr=Object.keys(queryStringObj);
+if(keyArr.length>0){
+for(var keyIndex=0;keyIndex<keyArr.length;keyIndex++){
+var name=keyArr[keyIndex];
+name=name.replace(/[\[\]]/g,"\\$&");
+urlParams[name]=queryStringObj[name];
+}
+}
+if(searchString){
+url=url.replace(searchString,this._transformToQueryString(urlParams));
+}else{
+url=url+"?"+this._transformToQueryString(urlParams);
+}
+
+return url;
+}},{key:'didShow',value:function didShow()
+
+{
+var router=this.router;
+if(router){
+this.props&&this.props.onDidFocus&&this.props.onDidFocus(router);
+}
+}},{key:'componentDidMount',value:function componentDidMount()
+
+{
+
+
+
+
+
+
+
+
+
+
+
+
+}}],[{key:'getID',value:function getID(){var id="crnweb_viewport_"+new Date().getTime();return id;}}]);return Navigator;}(_react.Component),_class.defaultProps={configureScene:function configureScene(){return this.__currentRouter.component;}},_class.contextTypes={store:null},_temp);var
+
+
+NavigationBar=function(_Component3){_inherits(NavigationBar,_Component3);
+function NavigationBar(){_classCallCheck(this,NavigationBar);return _possibleConstructorReturn(this,(NavigationBar.__proto__||Object.getPrototypeOf(NavigationBar)).call(this));
+
+}_createClass(NavigationBar,[{key:'render',value:function render()
+
+{
+var leftButton=null,rightButton=null;
+if(currentApp.navigation.navigator){
+
+if(_PlatformWeb2.default.isInApp){
+leftButton=this.props.routeMapper.LeftButton({pageContext:{}});
+}else{
+if(global&&global.history){
+if(global.history.length<=1){
+leftButton=null;
+}else{
+leftButton=this.props.routeMapper.LeftButton({pageContext:{}});
+}
+}else{
+leftButton=null;
+}
+}
+
+if(this.props.passProps&&this.props.passProps.pageContext){
+rightButton=this.props.routeMapper.RightButton(this.props.passProps);
+}
+
+}
+
+if(global.navigator&&global.navigator.userAgent.match(/(iPhone\sOS)\s([\d_]+)/)&&_PlatformWeb2.default.isInApp){
+
+var headerHeight=global.navigator.userAgent.indexOf("iPhoneX")>0?88-44:64-44;
+return(
+_react2.default.createElement(_View2.default,null,
+_react2.default.createElement(_View2.default,{style:_extends({flexDirection:'row'},this.props.style,{height:headerHeight,width:'100%'})}),
+
+_react2.default.createElement(_View2.default,{style:_extends({flexDirection:'row'},this.props.style,{height:44,width:'100%'})},
+leftButton,
+this.props.routeMapper.Title({
+title:this.props.urlTitle||this.props.passProps.title,
+style:this.props.style}),
+
+rightButton)));
+
+
+}else{
+
+return _react2.default.createElement(_View2.default,{style:_extends({flexDirection:'row'},this.props.style,{height:44,width:'100%'})},
+leftButton,
+this.props.routeMapper.Title({
+title:this.props.urlTitle||this.props.passProps.title,
+style:this.props.style}),
+
+rightButton);
+
+}
+}}]);return NavigationBar;}(_react.Component);
+
+
+Navigator.NavigationBar=NavigationBar;var
+
+SceneConfigs=(_temp3=_class3=function SceneConfigs(){_classCallCheck(this,SceneConfigs);},_class3.
+PushFromRight={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"sliderightin"}},_class3.
+FloatFromRight={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"sliderightin"}},_class3.
+FloatFromLeft={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"slideleftin"}},_class3.
+FloatFromBottom={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"slidedownin"}},_class3.
+FloatFromBottomAndroid={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"slidedownin"}},_class3.
+FadeAndroid={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"slidedownin"}},_class3.
+HorizontalSwipeJump={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"slideleftin"}},_class3.
+HorizontalSwipeJumpFromRight={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"sliderightin"}},_class3.
+VerticalUpSwipeJump={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"slideupin"}},_class3.
+VerticalDownSwipeJump={"gestures":{"jumpForward":{},"jumpBack":{},"animate":"slidedownin"}},_temp3);
+
+
+Navigator.SceneConfigs=SceneConfigs;exports.default=
+
+
+Navigator;module.exports=exports['default'];

@@ -1,0 +1,45 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+var prefixes=['','-webkit-','-o-','-moz-','-ms-'];
+var cssMap={
+
+'float':global.Range?'cssFloat':'styleFloat',
+textDecorationLine:'textDecoration'};
+
+
+
+var rcamelize=/[-_][^-_]/g;
+function camelize(target){
+
+if(!target||target.indexOf('-')<0&&target.indexOf('_')<0){
+return target;
+}
+
+return target.replace(rcamelize,function(match){
+return match.charAt(1).toUpperCase();
+});
+}
+
+function cssName(name,host,camelCase){
+if(cssMap[name]){
+return cssMap[name];
+}
+if(!host){
+if(global.document){
+host=global.document.documentElement.style;
+}else{
+host={};
+}
+}
+for(var i=0,n=prefixes.length;i<n;i++){
+camelCase=camelize(prefixes[i]+name);
+if(camelCase in host){
+return cssMap[name]=camelCase;
+}
+}
+return null;
+}exports.default=
+
+cssName;module.exports=exports['default'];

@@ -1,0 +1,359 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};
+
+
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);
+var _reactDom=require('react-dom');var _reactDom2=_interopRequireDefault(_reactDom);
+
+
+
+var _Platform=require('./../Platform/Platform.web');var _Platform2=_interopRequireDefault(_Platform);
+var _StyleSheet=require('./../../apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);
+
+var _renderApplication=require('./renderApplication');var _renderApplication2=_interopRequireDefault(_renderApplication);
+
+
+
+
+
+
+
+
+
+
+var _CCSWillBeInjected=require('./../../apis/StyleSheet/CCSWillBeInjected.web');var _CCSWillBeInjected2=_interopRequireDefault(_CCSWillBeInjected);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}global.webViews={};global.cw_routeMapConfig=WEBPACK_ROUTEMAP;global.cw_isI18n=WEBPACK_ISI18N;var cw_storage_key_headInfo="cw_storage_key_headInfo_cache";var document=global.document;var runnables={};
+
+_StyleSheet2.default.inject(_CCSWillBeInjected2.default);
+
+function addContainer(tag,props){
+var ele=document.createElement(tag);
+for(var pro in props){
+if(pro=="style"){
+ele[pro]["cssText"]+=props[pro];
+}else{
+ele[pro]=props[pro];
+}
+}
+document.body.appendChild(ele);
+return ele;
+}
+var AppRegistry={
+registerConfig:function registerConfig(config){
+for(var i=0;i<config.length;++i){
+var appConfig=config[i];
+if(appConfig.run){
+AppRegistry.registerRunnable(appConfig.appKey,appConfig.run);
+}else{
+AppRegistry.registerComponent(appConfig.appKey,appConfig.component);
+}
+}
+},
+
+GetRequest:function GetRequest(){
+var url=location.search;
+var theRequest={};
+if(url.indexOf("?")!=-1){
+var str=url.substr(1);
+var strs=str.split("&");
+for(var i=0;i<strs.length;i++){
+var sKeyval=strs[i];
+var key=sKeyval.split("=")[0];
+var val=sKeyval.replace(key+'=','');
+theRequest[key]=unescape(decodeURIComponent(val));
+}
+}
+return{initialProps:{urlQuery:theRequest,url:location.href}};
+},
+registerComponent:function registerComponent(appKey,getComponentFunc){
+runnables[appKey]={
+run:function run(appParameters){return(
+(0,_renderApplication2.default)(getComponentFunc(),appParameters.initialProps,appParameters.rootTag));}};
+
+
+if(_Platform2.default.isInApp){
+var params=null,flag=false;
+try{
+params=JSON.parse(global.name);
+}catch(e){
+console.log('global.name parse error',e);
+}
+if(params&&params.versionCode&&params.version){
+flag=true;
+try{
+global.localStorage.setItem(cw_storage_key_headInfo,JSON.stringify({
+syscode:params.systemCode||"",
+cver:params.internalVersion||params.version||"",
+xsid:params.extSouceID||"",
+cid:params.clientID||"",
+sid:params.sourceId||"",
+version:params.version||"",
+appId:params.appId||"",
+serverVersion:params.serverVersion||"",
+platform:params.platform||"",
+device:params.device,
+AllianceID:params.allianceId||"",
+OUID:params.ouId?params.ouId||"":""}));
+
+}catch(e){
+console.log("localStorage Fail");
+}
+
+try{
+global.localStorage.setItem("USERINFO",JSON.stringify(params.userInfo&&params.userInfo.data||""));
+}catch(e){
+console.log("localStorage Fail");
+}
+
+if(!global.app){
+global.app={};
+global.app.callback=function(){
+};
+}else{
+global.app.callback=function(){
+};
+}
+global.CtripPage&&CtripPage.app_show_loading_page();
+AppRegistry.runApplication(appKey,_extends({
+rootTag:document.getElementById('mainMock')},
+AppRegistry.GetRequest()));
+}else{
+var showFunc=function(){
+flag=true;
+CtripPage.app_show_loading_page();
+AppRegistry.runApplication(appKey,_extends({
+rootTag:document.getElementById('mainMock')},
+AppRegistry.GetRequest()));
+global.CtripUtil&&CtripUtil.app_init_member_H5_info();
+};
+global.app={
+callback:function callback(json_obj){
+var tagname=json_obj.tagname;
+
+if(tagname=='web_view_finished_load'){
+if(!flag){
+
+showFunc();
+}
+}else if(tagname=='init_member_H5_info'){
+var _params=json_obj.param;
+try{
+global.localStorage.setItem("USERINFO",JSON.stringify(_params&&_params.userInfo&&_params.userInfo.data||""));
+}catch(e){
+console.log("localStorage Fail");
+}
+}else if(tagname==='back'){
+history.back();
+}
+}};
+
+setTimeout(function(){
+if(!flag){
+showFunc();
+}
+},5000);
+}
+}else{
+AppRegistry.runApplication(appKey,_extends({
+rootTag:document.getElementById('mainMock')},
+AppRegistry.GetRequest()));
+}
+},
+registerRunnable:function registerRunnable(appKey,func){
+runnables[appKey]={
+run:func};
+
+return appKey;
+},
+
+getAppKeys:function getAppKeys(){
+return Object.keys(runnables);
+},
+
+runApplication:function runApplication(appKey,appParameters){
+runnables[appKey].run(appParameters);
+
+global.CtripBar&&global.CtripBar.app_set_navbar_hidden&&global.CtripBar.app_set_navbar_hidden(true);
+global.CtripPage&&CtripPage.app_hide_loading_page();
+}};var
+
+
+
+
+
+GlobalComponentRoot=function(_Component){_inherits(GlobalComponentRoot,_Component);function GlobalComponentRoot(){_classCallCheck(this,GlobalComponentRoot);return _possibleConstructorReturn(this,(GlobalComponentRoot.__proto__||Object.getPrototypeOf(GlobalComponentRoot)).apply(this,arguments));}_createClass(GlobalComponentRoot,[{key:'componentWillMount',value:function componentWillMount()
+{
+this.upper=[];
+this.middle=[];
+this.lower=[];
+
+document.getElementById('globalComponentRoot').addEventListener('touchmove',function(e){
+e.preventDefault&&e.preventDefault();
+},false);
+}},{key:'addComponent',value:function addComponent(
+
+obj){
+for(var i=0,max=this[obj.place].length;i<max;i++){
+if(this[obj.place][i].gid===obj.gid){
+this[obj.place][i]=obj;
+this.forceUpdate();
+return;
+}
+}
+this[obj.place].push(obj);
+this.forceUpdate();
+}},{key:'removeComponent',value:function removeComponent(
+gid,place){
+if(!gid){
+this.upper=[];
+this.middle=[];
+this.lower=[];
+}else{
+this[place].forEach(function(value,key,array){
+if(value.gid===gid){
+array.splice(key,1);
+
+}
+});
+}
+this.forceUpdate();
+}},{key:'render',value:function render()
+
+{
+if(this.upper.length+this.middle.length+this.lower.length>0){
+document.getElementById('globalComponentRoot').style.zIndex=10;
+}else{
+document.getElementById('globalComponentRoot').style.zIndex=-1;
+}
+return(
+
+
+
+
+_react2.default.createElement('div',{className:'rn-root'},
+this.lower.length>0?
+_react2.default.createElement('div',{className:'rn-global-compontent',style:{zIndex:0}},
+this.lower.map(function(value){
+return value.component;
+})):
+null,
+this.middle.length>0?
+_react2.default.createElement('div',{className:'rn-global-compontent',style:{zIndex:1}},
+this.middle.map(function(value){
+return value.component;
+})):
+null,
+this.upper.length>0?
+_react2.default.createElement('div',{className:'rn-global-compontent',style:{zIndex:2}},
+this.upper.map(function(value){
+return value.component;
+})):
+null));
+
+
+}}]);return GlobalComponentRoot;}(_react.Component);
+
+
+var _cnt=1;
+
+AppRegistry.utils={
+
+getGidNum:function getGidNum(){
+return _cnt++;
+},
+
+GlobalComponentRoot:null,
+init:function init(){
+var that=this;
+
+if(!this.GlobalComponentRoot){
+_reactDom2.default.render(
+_react2.default.createElement(GlobalComponentRoot,null),
+document.getElementById('globalComponentRoot'),function(){
+that.GlobalComponentRoot=this;
+});
+}
+},
+
+
+judgePlace:function judgePlace(type){
+var place=void 0;
+switch(type){
+case'Modal':
+place='lower';
+break;
+default:
+place='upper';}
+
+return place;
+},
+
+
+
+
+
+
+
+render:function render(Component,callBack){
+this.init();
+var that=this;
+var gid=Component.key||Component.props&&Component.props.guid;
+var type=gid.split('-')[0];
+var place=this.judgePlace(type);
+
+function getGlobalComponentRoot(){
+if(that.GlobalComponentRoot){
+that.GlobalComponentRoot&&that.GlobalComponentRoot.addComponent({component:Component,gid:gid,place:place});
+callBack&&callBack.onShow&&callBack.onShow.apply(that);
+}else{
+setTimeout(getGlobalComponentRoot,0);
+}
+}
+getGlobalComponentRoot();
+},
+
+hideContainer:function hideContainer(gid,callBack){
+if(!gid){
+this.GlobalComponentRoot&&this.GlobalComponentRoot.removeComponent();
+}else{
+var type=gid.split('-')[0];
+var place=this.judgePlace(type);
+this.GlobalComponentRoot&&this.GlobalComponentRoot.removeComponent(gid,place);
+}
+callBack&&callBack.onHide&&callBack.onHide();
+},
+
+addContainer:addContainer,
+addClass:function addClass(ele,className){
+if(!ele||!className){
+return;
+}
+if(ele.classList){
+ele.classList.add(className);
+}else{
+
+var classList=ele.className.split(/\s+/);
+if(classList.indexOf(className)===-1){
+classList.push(className);
+ele.className=classList.join(' ');
+}
+}
+},
+removeClass:function removeClass(ele,className){
+if(!ele||!className){
+return;
+}
+if(ele.classList){
+ele.classList.remove(className);
+}else{
+
+var classList=ele.className.split(/\s+/);
+var index=classList.indexOf(className);
+if(index!==-1){
+classList.splice(index,1);
+ele.className=classList.join(' ');
+}
+}
+}};exports.default=
+
+
+AppRegistry;module.exports=exports['default'];

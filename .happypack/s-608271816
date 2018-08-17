@@ -1,0 +1,65 @@
+
+
+
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default=undefined;var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);var _StyleSheet=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);var _Text=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Text/Text.web');var _Text2=_interopRequireDefault(_Text);var _View=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/View/View.web');var _View2=_interopRequireDefault(_View);var _Page2=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/crn/lib/Page.js');var _Page3=_interopRequireDefault(_Page2);var _ViewPort=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/crn/lib/ViewPort.js');var _ViewPort2=_interopRequireDefault(_ViewPort);var _Button=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/crn/lib/Button');var _Button2=_interopRequireDefault(_Button);var _HeaderView=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/crn/lib/HeaderView/HeaderView');var _HeaderView2=_interopRequireDefault(_HeaderView);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Page2=function(_Page){_inherits(Page2,_Page);function Page2(){_classCallCheck(this,Page2);return _possibleConstructorReturn(this,(Page2.__proto__||Object.getPrototypeOf(Page2)).apply(this,arguments));}_createClass(Page2,[{key:'render',value:function render()
+{var _this2=this;
+return(
+_react2.default.createElement(_ViewPort2.default,null,
+_react2.default.createElement(_HeaderView2.default,{title:'Page2',page:this}),
+_react2.default.createElement(_View2.default,{style:styles.container},
+_react2.default.createElement(_Text2.default,{style:styles.welcome},'Welcome to Ctrip React Native!'),
+
+
+_react2.default.createElement(_Text2.default,{style:styles.instructions},'Shake or press menu button for dev menu'),
+
+
+_react2.default.createElement(_Button2.default,{
+onPress:function onPress(){_this2.pop();},
+style:styles.button},'Back to Page1'))));
+
+
+
+
+
+}}]);return Page2;}(_Page3.default);exports.default=Page2;
+
+
+var styles=_StyleSheet2.default.create({
+container:{
+flex:1,
+justifyContent:'center',
+alignItems:'center',
+backgroundColor:'#F5FCFF'},
+
+welcome:{
+fontSize:20,
+textAlign:'center',
+margin:10},
+
+instructions:{
+textAlign:'center',
+color:'#333333',
+marginBottom:5},
+
+button:{
+backgroundColor:'#333333'}});module.exports=exports['default'];

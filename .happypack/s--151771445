@@ -1,0 +1,166 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp;
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);
+var _StyleSheet=require('./../../apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);
+var _Touchable=require('./../Touchable/Touchable.web');var _Touchable2=_interopRequireDefault(_Touchable);
+var _index=require('./../../modules/wrapper/NativeMethodsWrapper/index.web');var _index2=_interopRequireDefault(_index);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _objectWithoutProperties(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i];}return target;}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Text=(_temp=_class=function(_Component){_inherits(Text,_Component);
+function Text(props){_classCallCheck(this,Text);var _this=_possibleConstructorReturn(this,(Text.__proto__||Object.getPrototypeOf(Text)).call(this,
+props));
+_this.state=_extends({},
+_this.touchableGetInitialState(),{
+isHighlighted:false});return _this;
+
+}_createClass(Text,[{key:'componentWillMount',value:function componentWillMount()
+
+
+
+
+{var _this2=this;
+if(!!this.props.onPress||!!this.props.onLongPress){
+this._handlers={
+onStartShouldSetResponder:function onStartShouldSetResponder(e){
+return _this2.touchableHandleStartShouldSetResponder(e);
+},
+onResponderTerminationRequest:function onResponderTerminationRequest(e){
+return _this2.touchableHandleStartShouldSetResponder(e);
+},
+onResponderGrant:function onResponderGrant(e,d){
+return _this2.touchableHandleResponderGrant(e,d);
+},
+onResponderMove:function onResponderMove(e){
+return _this2.touchableHandleResponderMove(e);
+},
+onResponderRelease:function onResponderRelease(e){
+return _this2.touchableHandleResponderRelease(e);
+},
+onResponderTerminate:function onResponderTerminate(e){
+return _this2.touchableHandleResponderTerminate(e);
+}};
+
+}else{
+this._handlers={};
+}
+}},{key:'touchableHandleActivePressIn',value:function touchableHandleActivePressIn()
+
+{
+if(this.props.suppressHighlighting){
+return;
+}
+this.setState({
+isHighlighted:true});
+
+}},{key:'touchableHandleActivePressOut',value:function touchableHandleActivePressOut()
+
+{
+if(this.props.suppressHighlighting){
+return;
+}
+this.setState({
+isHighlighted:false});
+
+}},{key:'touchableHandlePress',value:function touchableHandlePress(
+
+e){
+this.props.onPress&&this.props.onPress(e);
+}},{key:'touchableHandleLongPress',value:function touchableHandleLongPress(
+
+e){
+this.props.onLongPress&&this.props.onLongPress(e);
+}},{key:'render',value:function render()
+
+{var _props=
+this.props,children=_props.children,ellipsizeMode=_props.ellipsizeMode,props=_objectWithoutProperties(_props,['children','ellipsizeMode']);
+var resultString="",isAllString=true;
+if(Array.isArray(children)){
+
+for(var aindex=0;aindex<children.length;aindex++){
+if(typeof children[aindex]=="string"||typeof children[aindex]=="number"){
+resultString+=children[aindex].toString();
+}else{
+isAllString=false;
+}
+}
+}else{
+isAllString=false;
+}
+if(isAllString){
+children=resultString;
+}
+
+
+var style=_StyleSheet2.default.fix(props.style||{});
+
+if(typeof props.numberOfLines==='number'){
+
+var fontSizeBase=global.fontSizeBase||100;
+var lineHeight=style.lineHeight||(parseFloat(style.fontSize)*fontSizeBase||14)*1.2;
+var numberOfLinesStyle=ellipsizeMode==='clip'?{
+overflow:'hidden',
+textOverflow:'clip',
+wordWrap:'break-word',
+maxHeight:parseFloat(lineHeight)*props.numberOfLines*fontSizeBase}:
+{
+overflow:'hidden',
+textOverflow:'ellipsis',
+wordWrap:'break-word',
+wordBreak:'break-all',
+display:'-webkit-box',
+WebkitLineClamp:props.numberOfLines,
+WebkitBoxOrient:'vertical',
+maxHeight:parseFloat(lineHeight)*props.numberOfLines*fontSizeBase};
+
+style=_extends(style,_StyleSheet2.default.fix(numberOfLinesStyle));
+}
+
+if(this.state.isHighlighted){
+style.backgroundColor='#f1f1f1';
+}
+
+
+var fsize=parseFloat(style.fontSize);
+var htmlFontSizeStyle=global.fontSizeBaseScale||100;
+var fminSize=parseFloat(12/htmlFontSizeStyle).toFixed(5);
+if(fsize<fminSize){
+fsize=parseFloat((fsize/fminSize).toFixed(5));
+
+var hackStyle=_StyleSheet2.default.fix({fontSize:11.5,display:'inline-flex',alignItems:'baseline',transform:[{scale:fsize}]});
+children=_react2.default.createElement('span',{style:hackStyle},children);
+}
+
+
+
+
+style.whiteSpace='pre-wrap';
+style.wordWrap='break-word';
+style.wordBreak='break-word';
+props.style=style;
+
+return(
+_react2.default.createElement('div',_extends({className:'rn-text'},props,this._handlers),
+children));
+
+
+}}]);return Text;}(_react.Component),_class.defaultProps={ellipsizeMode:'tail'},_temp);
+
+
+Text=(0,_index2.default)(Text);
+Text=(0,_Touchable2.default)(Text);
+Text.displayName="Text";exports.default=
+Text;module.exports=exports['default'];

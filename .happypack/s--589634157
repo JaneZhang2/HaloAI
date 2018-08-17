@@ -1,0 +1,42 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+
+
+
+
+
+
+
+
+
+var _dangerousStyleValue=require('./dangerousStyleValue');var _dangerousStyleValue2=_interopRequireDefault(_dangerousStyleValue);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+
+
+
+
+
+
+
+var setValueForStyles=function(node,styles,component){
+var style=node.style,
+
+
+
+
+styleValue;for(var styleName in styles){if(!styles.hasOwnProperty(styleName)){continue;}styleValue=(0,_dangerousStyleValue2.default)(styleName,styles[styleName],component);
+if(styleName==='float'||styleName==='cssFloat'){
+styleName=styleFloatAccessor;
+}
+if(styleValue){
+style[styleName]=styleValue;
+}else{
+style[styleName]='';
+}
+}
+};exports.default=
+
+setValueForStyles;module.exports=exports['default'];

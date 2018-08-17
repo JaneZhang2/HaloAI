@@ -1,0 +1,97 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};
+
+
+
+
+
+
+
+
+var _cssName=require('./cssName');var _cssName2=_interopRequireDefault(_cssName);
+var _fixUnit=require('./fixUnit');var _fixUnit2=_interopRequireDefault(_fixUnit);
+var _fixBorder=require('./fixBorder');var _fixBorder2=_interopRequireDefault(_fixBorder);
+var _fixFlexBox=require('./fixFlexBox');var _fixFlexBox2=_interopRequireDefault(_fixFlexBox);
+var _fixTransform=require('./fixTransform');var _fixTransform2=_interopRequireDefault(_fixTransform);
+var _fixBoxShadow=require('./fixBoxShadow');var _fixBoxShadow2=_interopRequireDefault(_fixBoxShadow);
+var _fixPaddingMargin=require('./fixPaddingMargin');var _fixPaddingMargin2=_interopRequireDefault(_fixPaddingMargin);
+var _fixTextShadow=require('./fixTextShadow');var _fixTextShadow2=_interopRequireDefault(_fixTextShadow);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _objectWithoutProperties(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i];}return target;}
+
+
+function isValidValue(value){
+return value!==''&&value!==true&&value!==undefined;
+}
+
+
+function fixStyleSheet(style){
+if(!style){
+return{};
+}
+var result={},
+
+value,_result,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+borderColor,other;for(var name in style){value=style[name];if(isValidValue(value)){if(_fixBorder2.default.names[name]){if(!style.fixBorder){_fixBorder2.default.handle(style,result);style.fixBorder=true;}}else if(_fixBoxShadow2.default.names[name]){if(!style.fixBoxShadow){_fixBoxShadow2.default.handle(style,result);style.fixBoxShadow=true;}continue;}else if(_fixTransform2.default.names[name]&&!style.fixTransform){_fixTransform2.default.handle(style,result);style.fixTransform=true;continue;}else if(_fixTextShadow2.default.names[name]){if(!style.fixTextShadow){_fixTextShadow2.default.handle(style,result);style.fixTextShadow=true;}continue;}if(_fixFlexBox2.default.names[name]){_fixFlexBox2.default.handle(name,value,result);}else if(_fixPaddingMargin2.default.names[name]){_fixPaddingMargin2.default.handle(name,value,result);}else{value=(0,_fixUnit2.default)(value,name);name=(0,_cssName2.default)(name)||name;result[name]=value;}}}var valueTemp=style.lineHeight,nameTemp="lineHeight";if(style.height&&valueTemp&&valueTemp!='auto'){result[nameTemp]=(0,_fixUnit2.default)(valueTemp,nameTemp);}else if(valueTemp){if(valueTemp!='auto'){if(!style["fontSize"]){result[nameTemp]=(0,_fixUnit2.default)(valueTemp,nameTemp);}}}if(style.borderColor||result.borderColor){_result=result,borderColor=_result.borderColor,other=_objectWithoutProperties(_result,['borderColor']);
+result=_extends({},other);
+result.borderTopColor=style.borderTopColor||style.borderColor||result.borderColor;
+result.borderBottomColor=style.borderBottomColor||style.borderColor||result.borderColor;
+result.borderLeftColor=style.borderLeftColor||style.borderColor||result.borderColor;
+result.borderRightColor=style.borderRightColor||style.borderColor||result.borderColor;
+}
+return result;
+}exports.default=
+
+fixStyleSheet;module.exports=exports['default'];

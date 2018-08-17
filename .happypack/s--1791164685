@@ -1,0 +1,228 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof(typeof Symbol==='function'?Symbol.iterator:'@@iterator')==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==(typeof Symbol==='function'?Symbol.prototype:'@@prototype')?"symbol":typeof obj;};var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp;
+var _react=require('react');var _react2=_interopRequireDefault(_react);
+
+var _StyleSheet=require('./../../apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);
+var _index=require('./../../modules/wrapper/LayoutWrapper/index.web');var _index2=_interopRequireDefault(_index);
+var _index3=require('./../../modules/wrapper/NativeMethodsWrapper/index.web');var _index4=_interopRequireDefault(_index3);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+
+ReactImage=(_temp=_class=function(_Component){_inherits(ReactImage,_Component);_createClass(ReactImage,null,[{key:'getSize',value:function getSize(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+uri,success,failure){
+if(!global.document){
+failure&&failure();
+return;
+}
+
+var wrap=global.document.createElement('div'),
+img=new Image(),
+loadedHandler=function(){
+img.removeEventListener('load',loadedHandler);
+success&&success(img.offsetWidth,img.offsetHeight);
+},
+errorHandler=function(){
+img.removeEventListener('error',errorHandler);
+failure&&failure();
+};
+
+wrap.style.cssText='height:0px;width:0px;overflow:hidden;visibility:hidden;';
+
+wrap.appendChild(img);
+global.document.body.appendChild(wrap);
+img.src=uri;
+if(!img.complete){
+img.addEventListener('error',errorHandler);
+img.addEventListener('load',loadedHandler);
+}else{
+loadedHandler();
+}
+}}]);
+function ReactImage(props){_classCallCheck(this,ReactImage);var _this=_possibleConstructorReturn(this,(ReactImage.__proto__||Object.getPrototypeOf(ReactImage)).call(this,
+props));
+_this.sourceUpdated=false;
+_this.image=null;
+
+_this.state={
+loaded:false,
+uri:getUri(props.source)};return _this;
+
+}_createClass(ReactImage,[{key:'render',value:function render()
+{
+var props=this.props,
+
+defaultSource=props.defaultSource,
+
+
+
+src=this.state.uri,
+styles=JSON.parse(JSON.stringify(Object.assign.apply(null,[{position:'relative',overflow:'hidden'}].concat(Array.isArray(props.style)?props.style:[props.style])))),
+resizeMode=props.resizeMode||styles&&styles.resizeMode;
+
+if(defaultSource&&(this.state.loaded===false||!src)){
+src=getUri(defaultSource);
+}
+
+if((props.children||resizeMode!=='none')&&!this.context.isInAParentText){
+styles.backgroundSize=resizeMode||'cover';
+styles.backgroundRepeat='no-repeat';
+styles.backgroundPosition=styles.backgroundPosition||'50%';
+styles.backgroundImage='url("'+src+'")';
+styles.display="flex";
+return(
+_react2.default.createElement('div',_extends({},props,{style:_StyleSheet2.default.fix([styles,resizeModeStyles[resizeMode]],null,"img"),'data-src':props.src}),
+this.props.children));
+
+
+}else{
+return _react2.default.createElement('img',_extends({},props,{style:_StyleSheet2.default.fix(styles,null,"img"),src:src,loop:'infinite'}));
+}
+}},{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
+
+props){
+var url=props&&getUri(props.source);
+if(url&&url!==this.state.uri){
+this.sourceUpdated=true;
+this.setState({
+loaded:false,
+uri:url});
+
+}else{
+this.sourceUpdated=false;
+}
+}},{key:'componentDidMount',value:function componentDidMount()
+{
+this._startImageLoader();
+}},{key:'componentDidUpdate',value:function componentDidUpdate()
+{
+if(this.sourceUpdated===true){
+this.sourceUpdated=false;
+this._startImageLoader();
+}
+}},{key:'componentWillUnmount',value:function componentWillUnmount()
+{
+this._stopImageLoader();
+}},{key:'_startImageLoader',value:function _startImageLoader()
+{var _this2=this;
+this._stopImageLoader();
+
+
+
+this.image=new Image();
+this.image.onload=function(e){
+_this2._onLoad(e);
+};
+this.image.onerror=function(e){
+_this2._onError(e);
+};
+this.image.src=this.state.uri;
+}},{key:'_stopImageLoader',value:function _stopImageLoader()
+
+{
+if(this.image){
+this.image.onload=null;
+this.image.onerror=null;
+this.image=null;
+}
+}},{key:'_onLoad',value:function _onLoad(
+e){
+this.setState({
+loaded:true});
+
+this.props.onLoad&&
+this.props.onLoad({
+nativeEvent:e});
+
+}},{key:'_onError',value:function _onError()
+{
+this.props.onError&&
+this.props.onError({
+nativeEvent:{
+error:'Failed to load '+this.state.uri+' 404 (Not Found)'}});
+
+
+}}]);return ReactImage;}(_react.Component),_class.resizeMode={contain:'contain',cover:'cover',stretch:'stretch',center:'center',repeat:'repeat'},_class.prefetch=function(uri){var img=new Image();img.src=uri;},_temp);
+
+
+function getUri(source){
+var uri='';
+if(source&&(typeof source==='undefined'?'undefined':_typeof(source))==='object'){
+uri=source.uri||'';
+}else if(typeof source==='string'){
+uri=source;
+}
+return uri;
+}
+
+var resizeModeStyles=_StyleSheet2.default.create({
+center:{
+backgroundSize:'auto',
+backgroundPosition:'center'},
+
+contain:{
+backgroundSize:'contain'},
+
+cover:{
+backgroundSize:'cover'},
+
+none:{
+backgroundSize:'auto'},
+
+repeat:{
+backgroundSize:'auto',
+backgroundRepeat:'repeat',
+backgroundPosition:'0 0'},
+
+stretch:{
+backgroundSize:'100% 100%'}});
+
+
+ReactImage=(0,_index2.default)(ReactImage);
+ReactImage=(0,_index4.default)(ReactImage);
+
+
+ReactImage.displayName="ReactImage";exports.default=
+
+
+ReactImage;module.exports=exports['default'];

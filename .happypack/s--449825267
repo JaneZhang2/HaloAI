@@ -1,0 +1,110 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp;var _StatusBar=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/StatusBar/StatusBar.web');var _StatusBar2=_interopRequireDefault(_StatusBar);var _index=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/Dimensions/index.web');var _index2=_interopRequireDefault(_index);
+var _isFunction=require('./Util/isFunction');var _isFunction2=_interopRequireDefault(_isFunction);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
+var metric=_index2.default.get('window');
+
+var oDeviceOptions=function(){
+var ua="";
+if(global.document){
+ua=navigator.userAgent;
+}
+
+var android=ua.match(/(Android);?[\s\/]+([\d.]+)?/);
+var iphone=ua.match(/(iPhone\sOS)\s([\d_]+)/);
+var wp=ua.match(/globals Phone ([\d.]+)/);
+var ipad=ua.match(/(iPad).*OS\s([\d_]+)/);
+var device=android?"android":iphone?"iphone":wp?"winphone":ipad?"ipad":"";
+return{
+android:android,
+iphone:iphone,
+winphone:wp,
+ipad:ipad,
+deviceType:device,
+isPhoneX:function isPhoneX(){
+try{
+if(ua.indexOf("iPhoneX")!==-1){
+return true;
+}
+if(global.document){
+var h=global.screen.height,w=global.screen.width;
+if(h===812||w===812){
+return true;
+}
+}
+
+}catch(e){
+}
+return false;
+},
+osVersionFunc:function osVersionFunc(){
+var typeObj=this;
+var osVersion="";
+if(typeObj.deviceType){
+var exp=typeObj[typeObj.deviceType];
+if(typeObj.android){
+osVersion=exp[2];
+}else if(typeObj.iphone){
+osVersion=exp[2].replace(/_/g,'.');
+}else if(typeObj.winphone){
+osVersion=exp[1];
+}else if(typeObj.ipad){
+osVersion=exp[2].replace(/_/g,'.');
+}
+}
+return osVersion;
+},
+isPadFunc:function isPadFunc(){
+if(this.ipad){
+return true;
+}else{
+return false;
+}
+}};
+
+}();var
+
+Device=(_temp=_class=function(){function Device(){_classCallCheck(this,Device);}_createClass(Device,null,[{key:'getDeviceType',value:function getDeviceType()
+
+{
+return oDeviceOptions.deviceType;
+}},{key:'setStatusBarStyle',value:function setStatusBarStyle(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+statusBarStyle){
+_StatusBar2.default.setBarStyle(statusBarStyle);
+}},{key:'isRemoteNotificationEnabled',value:function isRemoteNotificationEnabled(
+
+
+
+
+callback){
+(0,_isFunction2.default)(callback)?callback(false):"";
+}},{key:'getAppsInstallStatus',value:function getAppsInstallStatus(
+
+
+
+
+
+
+list,callback){
+(0,_isFunction2.default)(callback)?callback(false):"";
+}}]);return Device;}(),_class.deviceType=oDeviceOptions.deviceType,_class.screenWidth=metric.width,_class.screenHeight=metric.height,_class.imsi="",_class.imei="",_class.idfa="",_class.isiPhoneX=oDeviceOptions.isPhoneX(),_class.isJailBreak=null,_class.isPad=oDeviceOptions.isPadFunc(),_class.osVersion=oDeviceOptions.osVersionFunc(),_class.deviceInfo={},_temp);exports.default=
+
+
+Device;module.exports=exports['default'];

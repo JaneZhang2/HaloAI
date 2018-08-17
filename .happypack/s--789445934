@@ -1,0 +1,56 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp;function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var DeviceEventEmitter=(_temp=_class=function(){function DeviceEventEmitter(){_classCallCheck(this,DeviceEventEmitter);}_createClass(DeviceEventEmitter,null,[{key:"addListener",value:function addListener()
+
+{
+
+}},{key:"subscribe",value:function subscribe(
+message,handler,scope){
+if(message&&handler){
+if(!DeviceEventEmitter.messageQueue[message]){
+DeviceEventEmitter.messageQueue[message]=[];
+}
+DeviceEventEmitter.messageQueue[message].push({scope:scope,handler:handler});
+}
+}},{key:"getEventEmitter",value:function getEventEmitter(
+message){
+return{eventName:message,eventHandler:DeviceEventEmitter.messageQueue[message]};
+}},{key:"publish",value:function publish(
+message,args){var
+
+
+objectIndex,
+item;if(DeviceEventEmitter.messageQueue[message]){for(objectIndex=0;objectIndex<DeviceEventEmitter.messageQueue[message].length;objectIndex++){item=DeviceEventEmitter.messageQueue[message][objectIndex];
+item.handler.apply(item.scope?item.scope:global,args instanceof Array?args:[args]);
+}
+}
+return DeviceEventEmitter.messageQueue[message]&&DeviceEventEmitter.messageQueue[message].length;
+}},{key:"unsubscribe",value:function unsubscribe(
+message){
+if(DeviceEventEmitter.messageQueue[message]){
+delete DeviceEventEmitter.messageQueue[message];
+}
+}},{key:"_registryFunction",value:function _registryFunction()
+
+{
+DeviceEventEmitter.subscribe.apply(DeviceEventEmitter,arguments);
+}},{key:"_registryData",value:function _registryData(
+
+message){var _len,args,_key;
+if(!DeviceEventEmitter.messageQueue[message]){
+DeviceEventEmitter.messageQueue[message]=[];
+}for(_len=arguments.length,args=Array(_len>1?_len-1:0),_key=1;_key<_len;_key++){args[_key-1]=arguments[_key];}
+DeviceEventEmitter.messageQueue[message].data=args;
+}},{key:"_trigger",value:function _trigger(
+
+message){
+if(!DeviceEventEmitter.messageQueue[message]){
+DeviceEventEmitter.messageQueue[message]=[];
+}
+DeviceEventEmitter.publish(message,DeviceEventEmitter.messageQueue[message].data);
+DeviceEventEmitter.unsubscribe(message);
+}}]);return DeviceEventEmitter;}(),_class.messageQueue={},_temp);exports.default=
+
+
+
+
+
+DeviceEventEmitter;module.exports=exports["default"];

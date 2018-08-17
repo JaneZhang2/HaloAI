@@ -1,0 +1,64 @@
+
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(object,property,receiver){if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property),parent,getter;if(desc===undefined){parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else{return get(parent,property,receiver);}}else if("value"in desc){return desc.value;}else{getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}};
+
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);
+var _reactDom=require('react-dom');var _reactDom2=_interopRequireDefault(_reactDom);
+var _getLayout=require('./getLayout');var _getLayout2=_interopRequireDefault(_getLayout);
+var _throttle=require('lodash/throttle');var _throttle2=_interopRequireDefault(_throttle);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}exports.default=
+
+function(WrappedComponent){var
+LayoutMixin=function(_WrappedComponent){_inherits(LayoutMixin,_WrappedComponent);
+function LayoutMixin(props){_classCallCheck(this,LayoutMixin);var _this=_possibleConstructorReturn(this,(LayoutMixin.__proto__||Object.getPrototypeOf(LayoutMixin)).call(this,
+props));_this.
+
+
+
+
+
+unmounted=false;_this.layoutHandle=(0,_throttle2.default)(_this.layoutHandle.bind(_this),100,{trailing:true});_this.state=_extends({},_this.state,{layout:{},domNodeString:""});return _this;}_createClass(LayoutMixin,[{key:'componentDidMount',value:function componentDidMount()
+
+{
+_get(LayoutMixin.prototype.__proto__||Object.getPrototypeOf(LayoutMixin.prototype),'componentDidMount',this)&&_get(LayoutMixin.prototype.__proto__||Object.getPrototypeOf(LayoutMixin.prototype),'componentDidMount',this).call(this);
+if(this.props.onLayout){
+this.layoutHandle();
+}
+}},{key:'componentDidUpdate',value:function componentDidUpdate()
+
+{
+_get(LayoutMixin.prototype.__proto__||Object.getPrototypeOf(LayoutMixin.prototype),'componentDidUpdate',this)&&_get(LayoutMixin.prototype.__proto__||Object.getPrototypeOf(LayoutMixin.prototype),'componentDidUpdate',this).call(this);
+if(this.props.onLayout){
+this.layoutHandle();
+}
+}},{key:'componentWillUnmount',value:function componentWillUnmount()
+
+{
+
+_get(LayoutMixin.prototype.__proto__||Object.getPrototypeOf(LayoutMixin.prototype),'componentWillUnmount',this)&&_get(LayoutMixin.prototype.__proto__||Object.getPrototypeOf(LayoutMixin.prototype),'componentWillUnmount',this).call(this);
+this.unmounted=true;
+}},{key:'layoutHandle',value:function layoutHandle()
+
+{
+
+if(this.unmounted){
+return;
+}
+
+var domNode=_reactDom2.default.findDOMNode(this);
+var layout=(0,_getLayout2.default)(domNode);
+var stateLayout=this.state.layout;
+var stateDomNodeString=this.state.domNodeString;
+
+if(stateLayout.x!==layout.x||stateLayout.y!==layout.y||stateLayout.width!==layout.width||stateLayout.height!==layout.height||domNode.innerHTML!==stateDomNodeString){
+
+this.props.onLayout&&this.props.onLayout({nativeEvent:{layout:_extends({},layout)}});
+this.setState({layout:layout,domNodeString:domNode&&domNode.innerHTML});
+
+}
+}}]);return LayoutMixin;}(WrappedComponent);
+
+return LayoutMixin;
+};module.exports=exports['default'];

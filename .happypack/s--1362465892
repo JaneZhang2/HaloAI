@@ -1,0 +1,3 @@
+Object.defineProperty(exports,"__esModule",{value:true});var _isFunction=require('lodash/isFunction');var _isFunction2=_interopRequireDefault(_isFunction);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default=
+
+_isFunction2.default;module.exports=exports['default'];

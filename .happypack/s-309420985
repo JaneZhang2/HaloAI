@@ -1,0 +1,55 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+var _isUnitlessNumber=require("./../../modules/react-lib/CSSProperty/isUnitlessNumber");var _isUnitlessNumber2=_interopRequireDefault(_isUnitlessNumber);
+var _shorthandPropertyExpansions=require("./../../modules/react-lib/CSSProperty/shorthandPropertyExpansions");var _shorthandPropertyExpansions2=_interopRequireDefault(_shorthandPropertyExpansions);
+var _index=require("./../../apis/Dimensions/index.web");var _index2=_interopRequireDefault(_index);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+var runit=/\d*\.?\d+(rem|em|in|cm|mm|pt|pc|px|vh|vw|vmin|vmax|%)*/g;
+
+
+var rPrefixes=/^(Webkit|O|Moz|Ms)/;
+var fontSize=global.fontSizeBase||100;
+var cw_scale=_index2.default.get('window').scale;
+
+
+function fixUnit(value,name){
+
+
+if(typeof value==='number'){
+
+if(rPrefixes.test(name)){
+var nameArr=name.replace(/([A-Z])/g,'-$1').split('-');
+nameArr.shift();
+nameArr.shift();
+nameArr[0]=nameArr[0].toLowerCase();
+name=nameArr.join('');
+}
+
+
+
+
+if(!_isUnitlessNumber2.default[name]&&value>0&&value<1){
+value=1;
+}
+
+
+if(!_isUnitlessNumber2.default[name]&&typeof value==='number'){
+if(/border.*Width/.test(name)&&value==1){
+
+value=1/cw_scale;
+}
+return parseFloat((value/fontSize).toFixed(5))+'rem';
+}
+
+}
+
+if(_shorthandPropertyExpansions2.default[name]&&typeof value==='string'){
+value=value.replace(runit,function(val,unit){
+return unit?val:parseFloat((val/fontSize).toFixed(5))+'rem';
+});
+}
+return value;
+}exports.default=
+
+fixUnit;module.exports=exports["default"];

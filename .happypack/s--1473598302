@@ -1,0 +1,93 @@
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+
+var _index=require('../../../apis/UIManager/index.web');var _index2=_interopRequireDefault(_index);
+var _reactDom=require('react-dom');var _reactDom2=_interopRequireDefault(_reactDom);
+var _setNativeProps=require('./setNativeProps');var _setNativeProps2=_interopRequireDefault(_setNativeProps);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
+
+
+
+
+
+
+var mountSafeCallback=function(context,callback){
+return function(){
+if(!callback||context.isMounted&&!context.isMounted()){
+return;
+}
+return callback.apply(context,arguments);
+};
+};exports.default=
+
+function(WrappedComponent){var
+NativeMethodsMixin=function(_WrappedComponent){_inherits(NativeMethodsMixin,_WrappedComponent);function NativeMethodsMixin(){_classCallCheck(this,NativeMethodsMixin);return _possibleConstructorReturn(this,(NativeMethodsMixin.__proto__||Object.getPrototypeOf(NativeMethodsMixin)).apply(this,arguments));}_createClass(NativeMethodsMixin,[{key:'measure',value:function measure(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+callback){
+_index2.default.measure(
+_reactDom2.default.findDOMNode(this),
+mountSafeCallback(this,callback));
+
+}},{key:'measureLayout',value:function measureLayout(
+
+
+
+
+
+
+
+
+
+relativeToNativeNode,onSuccess,onFail){
+_index2.default.measureLayout(
+_reactDom2.default.findDOMNode(this),
+relativeToNativeNode,
+mountSafeCallback(this,onFail),
+mountSafeCallback(this,onSuccess));
+
+}},{key:'setNativeProps',value:function setNativeProps(
+
+
+
+
+
+
+
+nativeProps){
+(0,_setNativeProps2.default)(_reactDom2.default.findDOMNode(this),nativeProps,this);
+}},{key:'focus',value:function focus()
+
+
+
+
+
+{
+_reactDom2.default.findDOMNode(this).focus();
+}},{key:'blur',value:function blur()
+
+
+
+
+{
+_reactDom2.default.findDOMNode(this).blur();
+}}]);return NativeMethodsMixin;}(WrappedComponent);
+
+
+return NativeMethodsMixin;
+};module.exports=exports['default'];

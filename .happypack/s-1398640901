@@ -1,0 +1,57 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+
+
+
+
+
+
+
+
+var _cssName=require('./cssName');var _cssName2=_interopRequireDefault(_cssName);
+var _fixUnit=require('./fixUnit');var _fixUnit2=_interopRequireDefault(_fixUnit);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+function fixTransform(style,result){
+
+var name='transform';
+var convertName=['transform','transformMatrix'];
+var transformations=[];
+
+if(style[convertName[0]]){
+var value=style[convertName[0]];
+if(Array.isArray(value)){
+value.forEach(function(transformation){
+var key=Object.keys(transformation)[0];
+var val=transformation[key];
+if(!val){val=0;}
+
+
+if(val.__getValue){
+val=val.__getValue();
+}
+val=(0,_fixUnit2.default)(val,key);
+transformations.push(key+'('+val+')');
+});
+}else if(typeof value==='string'){
+transformations.push(value);
+}
+}
+
+
+if(style[convertName[1]]){
+var _value=style[convertName[1]];
+transformations.push('matrix3d'+'('+_value.join(',')+')');
+}
+
+name=(0,_cssName2.default)(name)||name;
+result[name]=transformations.join(' ');
+
+}
+var fixTransformObj={
+names:{
+transform:true,
+transformMatrix:true},
+
+handle:fixTransform};exports.default=
+
+fixTransformObj;module.exports=exports['default'];

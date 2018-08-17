@@ -1,0 +1,78 @@
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.TextButton=exports.ImageButton=undefined;var _extends=Object.assign||function(target){var i,source;for(i=1;i<arguments.length;i++){source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_temp;
+
+var _react=require('react');var _react2=_interopRequireDefault(_react);var _Text=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Text/Text.web');var _Text2=_interopRequireDefault(_Text);var _TouchableOpacity=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Touchable/TouchableOpacity.web');var _TouchableOpacity2=_interopRequireDefault(_TouchableOpacity);var _Image=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/components/Image/Image.web');var _Image2=_interopRequireDefault(_Image);var _StyleSheet=require('/Users/jane/Documents/HaloAI/node_modules/@ctrip/crnweb/src/react-native/apis/StyleSheet/StyleSheet.web');var _StyleSheet2=_interopRequireDefault(_StyleSheet);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _objectWithoutProperties(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i];}return target;}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+
+
+AbstractButton=(_temp=_class=function(_Component){_inherits(AbstractButton,_Component);function AbstractButton(){_classCallCheck(this,AbstractButton);return _possibleConstructorReturn(this,(AbstractButton.__proto__||Object.getPrototypeOf(AbstractButton)).apply(this,arguments));}return AbstractButton;}(_react.Component),_class.
+defaultProps={
+style:{
+backgroundColor:'transparent',
+overflow:'hidden'},
+
+textStyle:{
+color:'white',
+alignSelf:'center',
+fontSize:15,
+backgroundColor:'transparent'}},_temp);var
+
+
+
+
+ImageButton=function(_AbstractButton){_inherits(ImageButton,_AbstractButton);function ImageButton(){_classCallCheck(this,ImageButton);return _possibleConstructorReturn(this,(ImageButton.__proto__||Object.getPrototypeOf(ImageButton)).apply(this,arguments));}_createClass(ImageButton,[{key:'render',value:function render()
+{var _ref=
+this.props.imageStyle||{width:0,height:0},width=_ref.width,height=_ref.height,otherStyle=_objectWithoutProperties(_ref,['width','height']);var _ref2=
+this.props.imageInset||{top:0,right:0,bottom:0,left:0},top=_ref2.top,right=_ref2.right,bottom=_ref2.bottom,left=_ref2.left;
+var imgStyle=_extends({width:width,height:height,marginTop:top,marginRight:right,marginBottom:bottom,marginLeft:left,backgroundColor:'transparent'},otherStyle);
+if(this.props.tintColor){
+imgStyle.tintColor=this.props.tintColor;
+}
+return(
+_react2.default.createElement(_TouchableOpacity2.default,{disabled:this.props.disabled,onPress:this.props.onPress,style:this.props.style},
+_react2.default.createElement(_Image2.default,{
+source:this.props.imageSource,
+style:imgStyle})));
+
+
+
+
+}}]);return ImageButton;}(AbstractButton);var
+
+
+TextButton=function(_AbstractButton2){_inherits(TextButton,_AbstractButton2);function TextButton(){_classCallCheck(this,TextButton);return _possibleConstructorReturn(this,(TextButton.__proto__||Object.getPrototypeOf(TextButton)).apply(this,arguments));}_createClass(TextButton,[{key:'render',value:function render()
+{var _props=
+this.props,children=_props.children,props=_objectWithoutProperties(_props,['children']);
+var style=_StyleSheet2.default.fix(props.style,props);
+return(
+_react2.default.createElement(_TouchableOpacity2.default,{disabled:this.props.disabled,onPress:this.props.onPress,style:style},
+_react2.default.createElement(_Text2.default,{style:this.props.textStyle},this.props.children)));
+
+
+}}]);return TextButton;}(AbstractButton);var
+
+
+MixButton=function(_AbstractButton3){_inherits(MixButton,_AbstractButton3);function MixButton(){_classCallCheck(this,MixButton);return _possibleConstructorReturn(this,(MixButton.__proto__||Object.getPrototypeOf(MixButton)).apply(this,arguments));}_createClass(MixButton,[{key:'render',value:function render()
+{
+return(
+_react2.default.createElement(ImageButton,_extends({},this.props,{imageSource:this.props.imageSource})));
+
+
+}}]);return MixButton;}(AbstractButton);var
+
+
+Button=function(_Component2){_inherits(Button,_Component2);function Button(){_classCallCheck(this,Button);return _possibleConstructorReturn(this,(Button.__proto__||Object.getPrototypeOf(Button)).apply(this,arguments));}_createClass(Button,[{key:'render',value:function render()
+{
+if(this.props.imageSource&&this.props.children){
+return _react2.default.createElement(MixButton,_extends({},this.props,{imageStyle:{width:this.props.imageSource.width||0,height:this.props.imageSource.height||0}}));
+}else if(this.props.imageSource){
+return _react2.default.createElement(ImageButton,this.props);
+}else{
+return _react2.default.createElement(TextButton,this.props);
+}
+}}]);return Button;}(_react.Component);exports.default=
+
+
+
+Button;exports.
+ImageButton=ImageButton;exports.TextButton=TextButton;

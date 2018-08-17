@@ -1,0 +1,95 @@
+
+
+
+
+
+
+
+
+
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){var i,descriptor;for(i=0;i<props.length;i++){descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(object,property,receiver){if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property),parent,getter;if(desc===undefined){parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else{return get(parent,property,receiver);}}else if("value"in desc){return desc.value;}else{getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}};function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
+
+var GLOBAL=global;
+
+
+var setter=function(_setter,_clearer,array){
+return function(callback,delta){
+var id=_setter(function(){
+_clearer.call(this,id);
+callback.apply(this,arguments);
+}.bind(this),delta);
+
+if(!this[array]){
+this[array]=[id];
+}else{
+this[array].push(id);
+}
+return id;
+};
+};
+
+var clearer=function(_clearer,array){
+return function(id){var
+
+index;if(this[array]){index=this[array].indexOf(id);
+if(index!==-1){
+this[array].splice(index,1);
+}
+}
+_clearer(id);
+};
+};
+
+var _timeouts='TimerMixin_timeouts';
+var _clearTimeout=clearer(GLOBAL.clearTimeout,_timeouts);
+var _setTimeout=setter(GLOBAL.setTimeout,_clearTimeout,_timeouts);
+
+var _intervals='TimerMixin_intervals';
+var _clearInterval=clearer(GLOBAL.clearInterval,_intervals);
+var _setInterval=setter(GLOBAL.setInterval,function(){},_intervals);
+
+var _immediates='TimerMixin_immediates';
+var _clearImmediate=clearer(GLOBAL.clearImmediate,_immediates);
+var _setImmediate=setter(GLOBAL.setImmediate,_clearImmediate,_immediates);
+
+var _rafs='TimerMixin_rafs';
+var _cancelAnimationFrame=clearer(GLOBAL.cancelAnimationFrame,_rafs);
+var _requestAnimationFrame=setter(GLOBAL.requestAnimationFrame,_cancelAnimationFrame,_rafs);exports.default=
+
+
+function(WrappedComponent){var
+reactTimerWrapper=function(_WrappedComponent){_inherits(reactTimerWrapper,_WrappedComponent);function reactTimerWrapper(){var _ref,_len,args,_key;var _temp,_this,_ret;_classCallCheck(this,reactTimerWrapper);for(_len=arguments.length,args=Array(_len),_key=0;_key<_len;_key++){args[_key]=arguments[_key];}return _ret=(_temp=(_this=_possibleConstructorReturn(this,(_ref=reactTimerWrapper.__proto__||Object.getPrototypeOf(reactTimerWrapper)).call.apply(_ref,[this].concat(args))),_this),_this.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+setTimeout=_setTimeout,_this.
+clearTimeout=_clearTimeout,_this.
+
+setInterval=_setInterval,_this.
+clearInterval=_clearInterval,_this.
+
+setImmediate=_setImmediate,_this.
+clearImmediate=_clearImmediate,_this.
+
+requestAnimationFrame=_requestAnimationFrame,_this.
+cancelAnimationFrame=_cancelAnimationFrame,_temp),_possibleConstructorReturn(_this,_ret);}_createClass(reactTimerWrapper,[{key:'componentWillUnmount',value:function componentWillUnmount(){_get(reactTimerWrapper.prototype.__proto__||Object.getPrototypeOf(reactTimerWrapper.prototype),'componentWillUnmount',this)&&_get(reactTimerWrapper.prototype.__proto__||Object.getPrototypeOf(reactTimerWrapper.prototype),'super',this).call(this);this[_timeouts]&&this[_timeouts].forEach(function(id){GLOBAL.clearTimeout(id);});this[_timeouts]=null;this[_intervals]&&this[_intervals].forEach(function(id){GLOBAL.clearInterval(id);});this[_intervals]=null;this[_immediates]&&this[_immediates].forEach(function(id){GLOBAL.clearImmediate(id);});this[_immediates]=null;this[_rafs]&&this[_rafs].forEach(function(id){GLOBAL.cancelAnimationFrame(id);});this[_rafs]=null;}}]);return reactTimerWrapper;}(WrappedComponent);
+
+return reactTimerWrapper;
+};module.exports=exports['default'];

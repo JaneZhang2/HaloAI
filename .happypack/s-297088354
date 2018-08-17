@@ -1,0 +1,43 @@
+Object.defineProperty(exports,"__esModule",{value:true});
+var _Navigator=require('./../../components/Navigator/Navigator.web');var _Navigator2=_interopRequireDefault(_Navigator);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}
+
+
+var TextInputState={
+_currentFocus:null,
+currentFocus:function currentFocus(){
+return this._currentFocus;
+},
+blur:function blur(node){
+if(node===this._currentFocus&&node!==null){
+try{
+node.blur();
+}catch(e){}
+this._currentFocus=null;
+}
+},
+_timeoutID:"",
+focus:function focus(node){
+
+var that=this;
+var fn=function(){
+if(that._currentFocus!==node&&node!==null){
+try{
+node.focus();
+console.log('node.focus');
+}catch(e){
+console.log('node.focus failed',e);
+}
+that._currentFocus=node;
+}
+};
+if(_Navigator2.default.runAfterAnimation){
+_Navigator2.default.runAfterAnimation(fn);
+}else{
+clearTimeout(this._timeoutID);
+this._timeoutID=setTimeout(fn,560);
+}
+
+}};exports.default=
+
+
+TextInputState;module.exports=exports['default'];
